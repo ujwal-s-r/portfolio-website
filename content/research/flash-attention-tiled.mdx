@@ -1,0 +1,16 @@
+---
+title: "FlashAttention: Fast and Memory-Efficient Exact Attention"
+paper: "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness (Dao et al.)"
+description: "IO-aware tiled attention implementation using GPU SRAM tiling and online softmax rescaling to bypass HBM memory bottleneck."
+category: "Research Reproduction"
+period: "2024"
+tech: ["CUDA", "Triton", "GPU SRAM", "PyTorch C++ Extensions"]
+github: "https://github.com/ujwal-s-r"
+highlight: "IO-Aware Tiling & Online Softmax in Triton & CUDA"
+---
+
+## Key Highlights
+
+- Eliminated the $O(N^2)$ memory footprint of standard attention by tiling query, key, and value matrices directly in GPU shared memory (SRAM).
+- Computed exact attention outputs without ever writing the full attention matrix to High Bandwidth Memory (HBM).
+- Benchmarked across context lengths from 2k to 64k tokens, yielding up to 3.8x speedup over standard PyTorch SDPA without flash optimizations.

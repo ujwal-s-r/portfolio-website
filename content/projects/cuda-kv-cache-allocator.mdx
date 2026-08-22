@@ -1,0 +1,21 @@
+---
+title: "Custom CUDA Memory & KV Cache Allocator"
+description: "Lock-free GPU buddy memory allocator minimizing CUDA runtime synchronization overhead and eliminating memory fragmentation."
+category: "GPU Systems"
+period: "2024"
+tech: ["CUDA C++", "NVIDIA Nsight", "C++20", "Hardware Architecture"]
+featured: false
+github: "https://github.com/ujwal-s-r"
+demo: "https://github.com/ujwal-s-r"
+metrics: "Zero Lock Contention • 40% Less Fragmentation • 1.8x Faster Alloc"
+---
+
+## Overview
+
+Default `cudaMalloc` and PyTorch caching allocators introduce device synchronization locks and non-deterministic overheads during dynamic LLM decoding loops. This project provides a dedicated lock-free GPU memory allocator specifically designed for tensor cache pools.
+
+### Architectural Innovations
+
+- **Lock-Free Free-Lists**: Implemented atomic CAS (Compare-And-Swap) linked lists running directly on device threads.
+- **Hierarchical Memory Bins**: Divided memory pool into pow2 cache line aligned blocks (64B to 64MB) to guarantee 100% coalesced memory access.
+- **Nsight Systems Profiling**: Verified 0 host-device synchronization stalls across 100k continuous inference iterations.

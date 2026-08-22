@@ -1,0 +1,29 @@
+[
+  {
+    "id": "post-1",
+    "title": "Optimizing GPU Memory Bandwidth with Custom CUDA Tile Kernels",
+    "date": "Oct 2024",
+    "summary": "Deep dive into SRAM bank conflicts, coalesced global memory transactions, and how we cut attention kernel latencies by 40% using custom shared memory layouts.",
+    "url": "https://linkedin.com/in/ujwal",
+    "tags": ["CUDA", "GPU Performance", "Systems"],
+    "metrics": "1.2k reactions • 84 comments"
+  },
+  {
+    "id": "post-2",
+    "title": "Why We Migrated from Batch ETL to Real-Time Flink Pipelines",
+    "date": "Aug 2024",
+    "summary": "Breakdown of our journey processing 500M daily records: exactly how we tackled out-of-order event watermarking, state checkpointing, and cluster autoscaling on K8s.",
+    "url": "https://linkedin.com/in/ujwal",
+    "tags": ["Data Engineering", "Apache Flink", "Streaming"],
+    "metrics": "940 reactions • 62 comments"
+  },
+  {
+    "id": "post-3",
+    "title": "Demystifying FlashAttention: IO-Aware Tiling from Scratch",
+    "date": "May 2024",
+    "summary": "A mathematical and code-level walkthrough of online softmax scaling and eliminating the N×N HBM intermediate tensor read/write bottleneck.",
+    "url": "https://linkedin.com/in/ujwal",
+    "tags": ["LLM Architecture", "FlashAttention", "AI Systems"],
+    "metrics": "2.1k reactions • 140 comments"
+  }
+]

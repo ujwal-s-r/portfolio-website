@@ -1,0 +1,42 @@
+---
+title: "Real-Time Streaming Feature Store"
+description: "Petabyte-scale distributed streaming and feature ingestion platform powering real-time ML inference with sub-15ms feature retrieval."
+category: "Data Engineering"
+period: "2023 - 2024"
+tech: ["Apache Flink", "Kafka", "Redis", "Delta Lake", "Kubernetes", "gRPC"]
+featured: true
+github: "https://github.com/ujwal-s-r"
+demo: "https://github.com/ujwal-s-r"
+metrics: "500k events/sec • <12ms P99 Retrieval • 99.99% Uptime"
+---
+
+## Overview
+
+Designed and implemented a distributed dual-storage feature store serving both low-latency online ML models and high-throughput offline batch training sets without data leakage or train-serve skew.
+
+### System Architecture
+
+- **Ingestion & Processing**: Apache Flink streaming engine consuming 500,000+ financial transaction events per second from partitioned Kafka topics.
+- **Dual-Storage Engine**:
+  - **Online Storage**: Clustered Redis with pipelined binary serialization for sub-12ms P99 feature lookup.
+  - **Offline Storage**: Delta Lake on object storage with automatic compaction and Z-order indexing for time-travel queries.
+- **Unified Query Layer**: High-performance gRPC gateway serving synchronized point-in-time correct features for model inference.
+
+```python
+# Event time windowing with out-of-order event handling
+env = StreamExecutionEnvironment.get_execution_environment()
+stream = env.from_source(kafka_source, WatermarkStrategy.for_bounded_out_of_orderness(Duration.of_seconds(5)), "Kafka")
+
+feature_stream = (
+    stream
+    .key_by(lambda event: event.user_id)
+    .window(TumblingEventTimeWindows.of(Time.minutes(5)))
+    .aggregate(RollingTransactionAggregator())
+)
+```
+
+### Impact & Scalability
+
+- Scaled seamlessly to 1.8 billion daily processed feature updates.
+- Eliminated 100% of train-serve feature discrepancies.
+- Automated Kubernetes HPA (Horizontal Pod Autoscaling) based on consumer group lag metrics.

@@ -1,0 +1,21 @@
+---
+title: "Distributed Heterogeneous GPU Task Scheduler"
+description: "Topology-aware task placement engine optimizing multi-GPU communications across mixed NVIDIA A100/H100/L40S clusters."
+category: "Distributed Systems"
+period: "2023"
+tech: ["Rust", "Python", "gRPC", "Kubernetes CRD", "NVIDIA NVLink"]
+featured: false
+github: "https://github.com/ujwal-s-r"
+demo: "https://github.com/ujwal-s-r"
+metrics: "45% Reduction in Cross-NUMA Traffic • Topology Aware"
+---
+
+## Overview
+
+In clusters with heterogeneous accelerator topologies, naive job placement creates massive PCIe and cross-socket NVLink bandwidth bottlenecks. This scheduler models inter-GPU bandwidth as a graph flow problem to place communicating model shards optimally.
+
+### Key Capabilities
+
+- **Automated Topology Discovery**: Probes NVLink mesh, PCIe bus distance, and NUMA node proximity on node boot.
+- **ILP-Based Job Placement**: Uses an Integer Linear Programming solver to place pipeline stages along maximum bandwidth links.
+- **Custom K8s Controller**: Exposes custom resource definitions (`GpuJob`) for declarative ML workload scheduling.

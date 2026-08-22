@@ -1,0 +1,29 @@
+[
+  {
+    "id": "exp-1",
+    "company": "NeuralEdge Systems",
+    "role": "Lead AI/ML Systems Engineer",
+    "period": "2024 — Present",
+    "summary": "Architected low-latency inference runtimes and distributed GPU memory allocators for LLM serving.",
+    "tech": ["CUDA", "C++20", "PyTorch", "vLLM", "Triton", "Ray"],
+    "markdown": "### Lead AI/ML Systems Engineer @ NeuralEdge Systems\n\n**Period:** 2024 — Present | **Focus:** High-Throughput Inference & GPU Systems\n\n#### Key Contributions & Architecture\n- Engineered a custom **CUDA-accelerated KV Cache allocator** reducing memory fragmentation by 38% under high concurrency.\n- Built distributed continuous batching infrastructure scaling across multi-node NVIDIA H100 clusters.\n- Profiled and optimized memory bandwidth bottlenecks using NVIDIA Nsight Compute & Systems, cutting P99 latency by 2.4x.\n- Integrated FlashAttention-2 kernels into production Triton serving pipelines for real-time streaming tokens.\n\n#### Tech Stack Used\n`CUDA` `C++20` `PyTorch` `Triton` `vLLM` `Ray` `Docker` `NVIDIA Nsight`"
+  },
+  {
+    "id": "exp-2",
+    "company": "Apex Data Labs",
+    "role": "Data & ML Platform Engineer",
+    "period": "2023 — 2024",
+    "summary": "Built petabyte-scale stream processing engines and distributed feature stores for real-time fraud detection.",
+    "tech": ["Apache Spark", "Kafka", "Flink", "Python", "Kubernetes", "PostgreSQL"],
+    "markdown": "### Data & ML Platform Engineer @ Apex Data Labs\n\n**Period:** 2023 — 2024 | **Focus:** Large-Scale Distributed Data Infrastructure\n\n#### Key Contributions & Architecture\n- Architected an event-driven stream processing pipeline with **Apache Flink and Kafka** processing 450k+ events/sec with sub-50ms latency.\n- Designed a centralized feature store on top of Redis and Delta Lake, serving 120+ offline and real-time model endpoints.\n- Managed distributed compute workloads on Kubernetes clusters with automated Spot instance bin-packing, reducing cloud spend by 32%.\n- Authored CI/CD data quality checks and automated schema evolution guards.\n\n#### Tech Stack Used\n`Apache Spark` `Apache Flink` `Kafka` `Python` `Kubernetes` `Redis` `Delta Lake`"
+  },
+  {
+    "id": "exp-3",
+    "company": "Cognitive Scale AI",
+    "role": "Machine Learning Engineer",
+    "period": "2022 — 2023",
+    "summary": "Trained vision-language models and fine-tuned transformer architectures on custom domain corpora.",
+    "tech": ["PyTorch", "Hugging Face", "ONNX Runtime", "FastAPI", "Docker"],
+    "markdown": "### Machine Learning Engineer @ Cognitive Scale AI\n\n**Period:** 2022 — 2023 | **Focus:** Deep Learning Model Training & Deployment\n\n#### Key Contributions & Architecture\n- Pre-trained and fine-tuned transformer-based vision and document understanding models with PyTorch DDP.\n- Quantized models (INT8/FP16) using ONNX Runtime and TensorRT, reducing model footprint by 60% with zero accuracy degradation.\n- Developed async microservices with FastAPI and gRPC to serve real-time embedding search at scale.\n- Built automated evaluation pipelines measuring hallucination and retrieval precision across validation sets.\n\n#### Tech Stack Used\n`PyTorch` `Transformers` `TensorRT` `ONNX Runtime` `FastAPI` `gRPC` `Docker`"
+  }
+]

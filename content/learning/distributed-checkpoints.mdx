@@ -1,0 +1,15 @@
+---
+title: "Distributed Asynchronous Checkpointing & Zero-Redundancy"
+status: "in progress"
+description: "Non-blocking state saving for thousand-GPU training runs using tiered storage, NCCL sharding, and NVMe-over-Fabrics."
+progress: 60
+resources:
+  - "PyTorch Distributed Checkpoint (DCP) Design Docs"
+  - "DeepSpeed ZeRO-3 Memory Optimization Paper"
+github: "https://github.com/ujwal-s-r"
+---
+
+## Deep Dive: Scaling Training Fault Tolerance
+
+- Investigating non-blocking host memory staging so training iterations continue immediately without waiting for disk I/O.
+- Benchmarking distributed tensor sharding across GPUDirect Storage (GDS).
