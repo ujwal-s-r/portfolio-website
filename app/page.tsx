@@ -1,5 +1,6 @@
 import Navbar from "./components/Navbar";
 import PageNavigator from "./components/PageNavigator";
+import HeroIntro from "./components/HeroIntro";
 import ExperienceChain from "./components/ExperienceChain";
 import { SECTIONS } from "./data/sections";
 import { getExperiences } from "./lib/experience";
@@ -8,11 +9,24 @@ export default function Home() {
   const experiences = getExperiences();
 
   return (
-    <main className="bg-black min-h-screen text-white relative overflow-x-hidden">
+    <main className="min-h-screen bg-black text-white relative overflow-x-hidden">
       <Navbar />
       <PageNavigator />
 
       <div className="flex flex-col">
+        {/* =====================================================
+            ABOUT / HERO
+
+            Everything inside this wrapper is NORMAL FLOW.
+
+            The wrapper is vertically centered as one unit:
+              Hero
+                ↓ gap
+              Career Path
+
+            If Career Path grows, the whole unit grows and
+            naturally moves upward. Nothing overlaps.
+        ===================================================== */}
         <section
           id="about"
           className="
@@ -20,23 +34,52 @@ export default function Home() {
             w-full
             flex
             items-center
+            justify-start
             relative
+            px-6
             py-24
-          "
-          style={{
-            paddingLeft: "64px",
-            paddingRight: "24px",
-          }}
+            -translate-y-8
+            "
         >
           <div
-            className="w-full"
+            className="
+              w-full
+              flex
+              flex-col
+              items-start
+            "
             style={{
+              marginLeft: "64px",
               maxWidth: "720px",
             }}
           >
-            <ExperienceChain experiences={experiences} />
+            {/* ================= HERO BOUNDARY ================= */}
+
+            <div className="w-full shrink-0">
+              <HeroIntro />
+            </div>
+
+            {/* ================= SEPARATION ================= */}
+
+            <div
+              aria-hidden="true"
+              style={{
+                height: "32px",
+                flexShrink: 0,
+              }}
+            />
+
+            {/* ================= CAREER BOUNDARY ================= */}
+
+            <div className="w-full shrink-0">
+              <ExperienceChain experiences={experiences} />
+            </div>
           </div>
         </section>
+
+        {/* =====================================================
+            OTHER SECTIONS
+        ===================================================== */}
 
         {SECTIONS.slice(1).map((section) => (
           <section
@@ -47,17 +90,16 @@ export default function Home() {
               w-full
               flex
               items-center
+              justify-start
               relative
+              px-6
               py-24
             "
-            style={{
-              paddingLeft: "64px",
-              paddingRight: "24px",
-            }}
           >
             <div
               className="w-full"
               style={{
+                marginLeft: "64px",
                 maxWidth: "720px",
               }}
             />
