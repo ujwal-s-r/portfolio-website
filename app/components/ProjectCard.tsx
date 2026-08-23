@@ -297,7 +297,7 @@ export default function ProjectCard({
             flex-col
             justify-between
             p-3.5
-            sm:p-4
+            sm:p-2
           "
         >
           {/* TITLE */}
@@ -312,18 +312,20 @@ export default function ProjectCard({
           >
             <h3
               className="
-                h-[38px]
+                h-[52px]
                 sm:h-[42px]
                 min-w-0
                 flex-1
                 font-serif
-                text-[13px]
+                text-[12px]
                 font-medium
-                leading-[1.3]
+                leading-[1.28]
                 tracking-tight
                 text-white/95
-                sm:text-[15px]
-                line-clamp-2
+                sm:text-[14.5px]
+                sm:leading-[1.3]
+                line-clamp-3
+                sm:line-clamp-2
                 overflow-hidden
               "
             >
@@ -333,7 +335,7 @@ export default function ProjectCard({
             <span
               className="
                 shrink-0
-                pt-0.5
+                pt-0.3
                 font-mono
                 text-[9px]
                 tracking-[0.18em]

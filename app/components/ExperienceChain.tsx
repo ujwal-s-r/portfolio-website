@@ -47,7 +47,7 @@ export default function ExperienceChain({
   };
 
   return (
-    <div className="relative w-full max-w-2xl select-none">
+    <div className="relative w-full max-w-none select-none">
       {/* Career Path */}
       <h2
         className="

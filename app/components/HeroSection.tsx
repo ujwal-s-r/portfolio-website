@@ -47,7 +47,7 @@ export default function HeroSection({
         style={{
           gridTemplateColumns: isDesktop
             ? experienceHovered
-              ? "1.4fr 1.4fr"
+              ? "1.8fr 1fr"
               : "0.8fr 2fr"
             : "1fr",
           transition: isDesktop
