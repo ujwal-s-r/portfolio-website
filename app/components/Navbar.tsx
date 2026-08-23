@@ -108,7 +108,7 @@ export default function Navbar() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   return (
-    <header className="fixed top-6 left-0 right-0 flex justify-center z-50 pointer-events-none px-4">
+    <header className="fixed top-3 left-0 right-0 flex justify-center z-50 pointer-events-none px-4">
       {/* Dynamic Island Capsule Container - Rock-solid anchored */}
       <nav
         id="dynamic-island-navbar"

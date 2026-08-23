@@ -1,12 +1,14 @@
 import Navbar from "./components/Navbar";
 import PageNavigator from "./components/PageNavigator";
-import HeroIntro from "./components/HeroIntro";
-import ExperienceChain from "./components/ExperienceChain";
+import HeroSection from "./components/HeroSection";
 import { SECTIONS } from "./data/sections";
 import { getExperiences } from "./lib/experience";
+import { getProjects, getResearch } from "./lib/projects";
 
 export default function Home() {
   const experiences = getExperiences();
+  const projects = getProjects();
+  const research = getResearch();
 
   return (
     <main className="min-h-screen bg-black text-white relative overflow-x-hidden">
@@ -15,17 +17,12 @@ export default function Home() {
 
       <div className="flex flex-col">
         {/* =====================================================
-            ABOUT / HERO
+            PAGE 1 — HERO SPLIT LAYOUT
 
-            Everything inside this wrapper is NORMAL FLOW.
+            Left (~35%):  Identity column (Intro + Career Path)
+            Right (~65%): Projects grid
 
-            The wrapper is vertically centered as one unit:
-              Hero
-                ↓ gap
-              Career Path
-
-            If Career Path grows, the whole unit grows and
-            naturally moves upward. Nothing overlaps.
+            On mobile: stacks vertically
         ===================================================== */}
         <section
           id="about"
@@ -33,48 +30,21 @@ export default function Home() {
             min-h-screen
             w-full
             flex
-            items-center
+            items-start
             justify-start
             relative
-            px-6
-            py-24
-            -translate-y-8
-            "
+            px-5
+            sm:px-6
+            md:px-8
+            pb-24
+          "
+          style={{ paddingTop: "3rem" }}
         >
-          <div
-            className="
-              w-full
-              flex
-              flex-col
-              items-start
-            "
-            style={{
-              marginLeft: "64px",
-              maxWidth: "720px",
-            }}
-          >
-            {/* ================= HERO BOUNDARY ================= */}
-
-            <div className="w-full shrink-0">
-              <HeroIntro />
-            </div>
-
-            {/* ================= SEPARATION ================= */}
-
-            <div
-              aria-hidden="true"
-              style={{
-                height: "32px",
-                flexShrink: 0,
-              }}
-            />
-
-            {/* ================= CAREER BOUNDARY ================= */}
-
-            <div className="w-full shrink-0">
-              <ExperienceChain experiences={experiences} />
-            </div>
-          </div>
+          <HeroSection
+            experiences={experiences}
+            projects={projects}
+            research={research}
+          />
         </section>
 
         {/* =====================================================
