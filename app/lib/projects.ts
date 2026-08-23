@@ -10,6 +10,7 @@ export interface ProjectItem {
   order: number;
   featured: boolean;
   github: string;
+  linkedin: string;
   link: string;
   event: string;
   points: string[];
@@ -116,6 +117,7 @@ function loadProjectsFrom(folder: string): ProjectItem[] {
       order: data.order ? parseInt(data.order, 10) : 99,
       featured: data.featured === "true",
       github: data.github || "",
+      linkedin: data.linkedin || "",
       link: data.link || "",
       event: data.event || "",
       points,

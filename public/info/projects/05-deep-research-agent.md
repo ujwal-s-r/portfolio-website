@@ -5,6 +5,7 @@ techStack: "Python, LangChain, Supabase, Vector DB, Google-OAuth"
 order: 5
 featured: false
 github: ""
+linkedin: ""
 link: ""
 event: "Freelancing Project"
 ---

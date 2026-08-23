@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HeroIntro from "./HeroIntro";
 import ExperienceChain from "./ExperienceChain";
 import ProjectsGrid from "./ProjectsGrid";
@@ -19,40 +19,47 @@ export default function HeroSection({
   research,
 }: HeroSectionProps) {
   const [experienceHovered, setExperienceHovered] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkIsDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+
+    checkIsDesktop();
+    window.addEventListener("resize", checkIsDesktop, { passive: true });
+    return () => window.removeEventListener("resize", checkIsDesktop);
+  }, []);
 
   return (
-    <div
-      className="w-full min-w-0"
-      style={{
-        paddingLeft: "64px",
-        paddingRight: "1rem",
-      }}
-    >
+    <div className="w-full min-w-0 pl-0 md:pl-16 pr-0 md:pr-4">
       {/* =========================================================
-          2-COLUMN GRID: Left identity + Right projects
-
-          Normal:   0.8fr  2fr    (left ~29%, right ~71%)
-          Expanded: 1.4fr  1.4fr  (left ~50%, right ~50%)
-
-          The grid-template-columns transition smoothly expands
-          the left column when career path is hovered, while
-          squeezing the right project cards.
+          RESPONSIVE LAYOUT:
+          - Mobile / Tablet (< lg): Single column vertical stack:
+              1. Hero Intro
+              2. Career Path
+              3. Projects (2 cards side-by-side)
+              4. Research (2 cards side-by-side)
+          - Desktop (>= lg): Split grid (Identity ~35% | Projects ~65%)
       ========================================================= */}
       <div
-        className="w-full grid gap-8 items-start"
+        className="w-full grid gap-10 lg:gap-8 items-start"
         style={{
-          gridTemplateColumns: experienceHovered
-            ? "1.4fr 1.4fr"
-            : "0.8fr 2fr",
-          transition:
-            "grid-template-columns 0.45s cubic-bezier(0.16, 1, 0.3, 1)",
+          gridTemplateColumns: isDesktop
+            ? experienceHovered
+              ? "1.4fr 1.4fr"
+              : "0.8fr 2fr"
+            : "1fr",
+          transition: isDesktop
+            ? "grid-template-columns 0.45s cubic-bezier(0.16, 1, 0.3, 1)"
+            : "none",
         }}
       >
         {/* =====================================================
-            LEFT COLUMN — Identity
-            Grows wider when career path description opens
+            LEFT COLUMN (Desktop) / TOP SECTION (Mobile)
+            Hero Intro + Career Path
         ===================================================== */}
-        <div className="flex flex-col items-start gap-6 min-w-0">
+        <div className="flex flex-col items-start gap-8 min-w-0 w-full">
           {/* Hero Intro */}
           <div className="w-full shrink-0">
             <HeroIntro />
@@ -68,14 +75,14 @@ export default function HeroSection({
         </div>
 
         {/* =====================================================
-            RIGHT COLUMN — Projects
-            Squeezes when left column grows
+            RIGHT COLUMN (Desktop) / BOTTOM SECTION (Mobile)
+            Projects (2 cards side by side) + Research
         ===================================================== */}
         <div className="w-full min-w-0 self-start">
           <ProjectsGrid
             projects={projects}
             research={research}
-            compressed={experienceHovered}
+            compressed={isDesktop && experienceHovered}
           />
         </div>
       </div>

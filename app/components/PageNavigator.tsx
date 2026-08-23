@@ -60,6 +60,8 @@ export default function PageNavigator({
     <aside
       aria-label="Page navigation"
       className="
+        hidden
+        md:block
         fixed
         top-1/2
         -translate-y-1/2

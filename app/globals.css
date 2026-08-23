@@ -1,18 +1,22 @@
 @import "tailwindcss";
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
-html {
-  scroll-behavior: smooth;
-}
+  html {
+    scroll-behavior: smooth;
+  }
 
-html,
-body {
-  height: 100%;
-  background-color: #000000;
-  color: #ffffff;
+  html,
+  body {
+    height: 100%;
+    background-color: #000000;
+    color: #ffffff;
+  }
 }

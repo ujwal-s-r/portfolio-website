@@ -5,6 +5,7 @@ techStack: "Python, TensorFlow, Flask, OpenCV, DeepFace, Mediapipe, Gemini-flash
 order: 4
 featured: false
 github: ""
+linkedin: ""
 link: ""
 ---
 

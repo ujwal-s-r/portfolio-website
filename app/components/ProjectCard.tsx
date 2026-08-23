@@ -6,16 +6,19 @@ import type { ProjectItem } from "../lib/projects";
 interface ProjectCardProps {
   project: ProjectItem;
   index: number;
+  onOpen: (project: ProjectItem) => void;
 }
 
 export default function ProjectCard({
   project,
   index,
+  onOpen,
 }: ProjectCardProps) {
   const hasImage = Boolean(project.image);
 
   return (
     <motion.article
+      onClick={() => onOpen(project)}
       className="
         group
         relative
@@ -250,7 +253,6 @@ export default function ProjectCard({
 
         {/* =========================================================
             CONTENT
-            IMPORTANT: !px-5 !py-5 deliberately forces padding.
         ========================================================= */}
         <div
           className="
@@ -258,12 +260,8 @@ export default function ProjectCard({
             min-h-0
             flex-1
             flex-col
-
-            !px-5
-            !py-5
-
-            sm:!px-3
-            sm:!py-2
+            p-3.5
+            sm:p-4
           "
         >
           {/* TITLE */}
@@ -273,22 +271,21 @@ export default function ProjectCard({
               w-full
               items-start
               justify-between
-              gap-3
+              gap-2
             "
           >
             <h3
               className="
                 min-w-0
-                min-h-[36px]
                 flex-1
                 font-serif
-                text-[14px]
+                text-[13px]
                 font-medium
                 leading-[1.3]
                 tracking-tight
                 text-white/95
-                sm:min-h-[39px]
                 sm:text-[15px]
+                line-clamp-2
               "
             >
               {project.title}
@@ -308,37 +305,14 @@ export default function ProjectCard({
             </span>
           </div>
 
-          {/* TECH STACK */}
-          <div
-            className="
-              mt-4
-              flex
-              h-[26px]
-              w-full
-              items-center
-              gap-1.5
-              overflow-hidden
-            "
-          >
-            {project.techStack.slice(0, 4).map((tech) => (
-              <span
-                key={tech}
-                className="
-                  inline-flex
-                  items-center
-                  rounded-full
-                  border
-                  border-white/[0.12]
-                  bg-white/[0.035]
-                  px-2
-                  py-1
-                  font-mono
-                  text-[9px]
-                  leading-none
-                  text-white/55
-                "
-              >
+          {/* TECH STACK - Clean text without ugly pill boundaries */}
+          <div className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 font-mono text-[9.5px] sm:text-[11px] text-white/50">
+            {project.techStack.slice(0, 4).map((tech, i) => (
+              <span key={tech} className="inline-flex items-center">
                 {tech}
+                {i < Math.min(project.techStack.length, 4) - 1 && (
+                  <span className="text-white/20 ml-1.5 select-none">·</span>
+                )}
               </span>
             ))}
           </div>
