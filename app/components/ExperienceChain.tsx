@@ -5,6 +5,7 @@ import { ExperienceItem } from "../lib/experience";
 
 interface ExperienceChainProps {
   experiences: ExperienceItem[];
+  onHoverChange?: (hovered: boolean) => void;
 }
 
 function renderMarkdownText(text: string) {
@@ -28,8 +29,22 @@ function renderMarkdownText(text: string) {
 
 export default function ExperienceChain({
   experiences,
+  onHoverChange,
 }: ExperienceChainProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+  const updateHover = (id: string | null) => {
+    setHoveredId(id);
+    onHoverChange?.(id !== null);
+  };
+
+  const toggleItem = (id: string) => {
+    if (hoveredId === id) {
+      updateHover(null);
+    } else {
+      updateHover(id);
+    }
+  };
 
   return (
     <div className="relative w-full max-w-2xl select-none">
@@ -65,7 +80,7 @@ export default function ExperienceChain({
               "
               onMouseLeave={() => {
                 if (isHovered) {
-                  setHoveredId(null);
+                  updateHover(null);
                 }
               }}
             >
@@ -101,7 +116,7 @@ export default function ExperienceChain({
                     className="
                       rounded-full
                       transition-all
-                      duration-300
+                      duration-500
                     "
                     style={{
                       width: isHovered ? "8px" : "6px",
@@ -137,13 +152,6 @@ export default function ExperienceChain({
 
               {/* =================================================
                   EXPERIENCE CONTENT
-
-                  This element owns its own height.
-
-                  Expanding it therefore increases the height of
-                  ExperienceChain, which increases the height of
-                  the parent layout. Because the parent is centered,
-                  the complete block naturally shifts upward.
               ================================================= */}
 
               <div
@@ -161,7 +169,7 @@ export default function ExperienceChain({
                     : "36px",
 
                   transition:
-                    "padding-bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                    "padding-bottom 0.55s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
               >
                 {/* Header */}
@@ -174,8 +182,19 @@ export default function ExperienceChain({
                     flex-col
                     group
                     pt-0.5
+                    touch-manipulation
                   "
-                  onMouseEnter={() => setHoveredId(exp.id)}
+                  onMouseEnter={() => updateHover(exp.id)}
+                  onClick={() => toggleItem(exp.id)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleItem(exp.id);
+                    }
+                  }}
+                  aria-expanded={isHovered}
                 >
                   {/* Company + period */}
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -187,7 +206,7 @@ export default function ExperienceChain({
                         tracking-tight
                         leading-tight
                         transition-colors
-                        duration-200
+                        duration-300
                       "
                       style={{
                         color: isHovered
@@ -259,7 +278,7 @@ export default function ExperienceChain({
                           w-3.5
                           h-3.5
                           transition-transform
-                          duration-300
+                          duration-500
                         "
                         style={{
                           transform: isHovered
@@ -279,18 +298,13 @@ export default function ExperienceChain({
 
                 {/* =================================================
                     EXPANDABLE WORK
-
-                    IMPORTANT:
-                    This is NOT absolute-positioned.
-
-                    Its height becomes real layout height.
                 ================================================= */}
 
                 <div
                   className="
                     grid
                     transition-all
-                    duration-400
+                    duration-550
                     ease-out
                   "
                   style={{
@@ -307,10 +321,10 @@ export default function ExperienceChain({
                       : "none",
 
                     transition:
-                      "grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s",
+                      "grid-template-rows 0.55s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.55s",
                   }}
                   onMouseEnter={() =>
-                    setHoveredId(exp.id)
+                    updateHover(exp.id)
                   }
                 >
                   <div className="overflow-hidden">
@@ -331,7 +345,7 @@ export default function ExperienceChain({
                           : "translateY(-6px)",
 
                         transition:
-                          "opacity 0.35s ease 0.05s, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.05s",
+                          "opacity 0.45s ease 0.05s, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.05s",
                       }}
                     >
                       {exp.points.map(
