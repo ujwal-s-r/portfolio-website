@@ -12,6 +12,12 @@ export interface NowItem {
   description: string;
 }
 
+export interface SkillGroup {
+  id: string;
+  category: string;
+  skills: string[];
+}
+
 function loadNowItemsFrom(subfolder: "building" | "learning"): NowItem[] {
   const dir = path.join(process.cwd(), "public", "info", "now", subfolder);
   if (!fs.existsSync(dir)) return [];
@@ -69,4 +75,47 @@ export function getNowBuilding(): NowItem[] {
 
 export function getNowLearning(): NowItem[] {
   return loadNowItemsFrom("learning");
+}
+
+export function getNowSkills(): SkillGroup[] {
+  const filePath = path.join(process.cwd(), "public", "info", "now", "skills.md");
+  if (!fs.existsSync(filePath)) return [];
+
+  const content = fs.readFileSync(filePath, "utf-8");
+  const lines = content.split("\n");
+
+  const groups: SkillGroup[] = [];
+  let currentCategory = "";
+  let currentSkills: string[] = [];
+
+  const finalizeGroup = () => {
+    if (currentCategory && currentSkills.length > 0) {
+      groups.push({
+        id: currentCategory.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        category: currentCategory,
+        skills: currentSkills,
+      });
+    }
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) continue;
+
+    if (line.startsWith("#")) {
+      finalizeGroup();
+      currentCategory = line.replace(/^#+\s*/, "").trim();
+      currentSkills = [];
+    } else {
+      // Split by bullet · or comma or pipe
+      const parts = line
+        .split(/[·,|]/)
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
+      currentSkills.push(...parts);
+    }
+  }
+
+  finalizeGroup();
+  return groups;
 }

@@ -3,9 +3,10 @@ import PageNavigator from "./components/PageNavigator";
 import HeroSection from "./components/HeroSection";
 import NowSection from "./components/NowSection";
 import ActivitySection from "./components/ActivitySection";
+import FooterSection from "./components/FooterSection";
 import { getExperiences } from "./lib/experience";
 import { getProjects, getResearch } from "./lib/projects";
-import { getNowBuilding, getNowLearning } from "./lib/now";
+import { getNowBuilding, getNowLearning, getNowSkills } from "./lib/now";
 import { getLinkedInPosts } from "./lib/linkedin";
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
   const research = getResearch();
   const buildingItems = getNowBuilding();
   const learningItems = getNowLearning();
+  const skillGroups = getNowSkills();
   const linkedInPosts = getLinkedInPosts();
 
   return (
@@ -50,7 +52,7 @@ export default function Home() {
         </section>
 
         {/* =====================================================
-            PAGE 2 — NOW (BUILDING & LEARNING)
+            PAGE 2 — NOW (SKILLS, BUILDING & LEARNING)
         ===================================================== */}
         <section
           id="now"
@@ -64,10 +66,11 @@ export default function Home() {
             sm:px-6
             md:px-8
             pt-4
-            pb-16
+            pb-10
           "
         >
           <NowSection
+            skillGroups={skillGroups}
             buildingItems={buildingItems}
             learningItems={learningItems}
           />
@@ -88,10 +91,31 @@ export default function Home() {
             sm:px-6
             md:px-8
             pt-4
-            pb-28
+            pb-10
           "
         >
           <ActivitySection linkedInPosts={linkedInPosts} />
+        </section>
+
+        {/* =====================================================
+            PAGE 4 — FOOTER & CONTACT
+        ===================================================== */}
+        <section
+          id="contact"
+          className="
+            w-full
+            flex
+            items-center
+            justify-center
+            relative
+            px-5
+            sm:px-6
+            md:px-8
+            pt-2
+            pb-6
+          "
+        >
+          <FooterSection />
         </section>
       </div>
     </main>
