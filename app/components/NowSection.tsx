@@ -163,8 +163,8 @@ export default function NowSection({
   );
 
   return (
-    <div className="w-full min-w-0 pl-0 md:pl-16 pr-0 md:pr-4">
-      <div className="w-full max-w-4xl">
+    <div className="w-full flex justify-center">
+      <div className="w-full max-w-5xl">
         {/* =======================================================
             SECTION MAIN HEADING: NOW
         ======================================================= */}

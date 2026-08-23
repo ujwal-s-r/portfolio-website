@@ -2,9 +2,11 @@ import Navbar from "./components/Navbar";
 import PageNavigator from "./components/PageNavigator";
 import HeroSection from "./components/HeroSection";
 import NowSection from "./components/NowSection";
+import ActivitySection from "./components/ActivitySection";
 import { getExperiences } from "./lib/experience";
 import { getProjects, getResearch } from "./lib/projects";
 import { getNowBuilding, getNowLearning } from "./lib/now";
+import { getLinkedInPosts } from "./lib/linkedin";
 
 export default function Home() {
   const experiences = getExperiences();
@@ -12,6 +14,7 @@ export default function Home() {
   const research = getResearch();
   const buildingItems = getNowBuilding();
   const learningItems = getNowLearning();
+  const linkedInPosts = getLinkedInPosts();
 
   return (
     <main className="min-h-screen bg-black text-white relative overflow-x-hidden">
@@ -48,10 +51,6 @@ export default function Home() {
 
         {/* =====================================================
             PAGE 2 — NOW (BUILDING & LEARNING)
-            
-            GAP CONFIGURATION:
-            Adjust `pt-6` / `pt-8` / `pt-12` below to control the gap
-            between the Expand More button and the Now section!
         ===================================================== */}
         <section
           id="now"
@@ -64,14 +63,35 @@ export default function Home() {
             px-5
             sm:px-6
             md:px-8
-            pt-0
-            pb-28
+            pt-4
+            pb-16
           "
         >
           <NowSection
             buildingItems={buildingItems}
             learningItems={learningItems}
           />
+        </section>
+
+        {/* =====================================================
+            PAGE 3 — ACTIVITY (GITHUB & LINKEDIN)
+        ===================================================== */}
+        <section
+          id="activity"
+          className="
+            w-full
+            flex
+            items-start
+            justify-start
+            relative
+            px-5
+            sm:px-6
+            md:px-8
+            pt-4
+            pb-28
+          "
+        >
+          <ActivitySection linkedInPosts={linkedInPosts} />
         </section>
       </div>
     </main>
