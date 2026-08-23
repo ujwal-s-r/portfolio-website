@@ -262,8 +262,8 @@ export default function ProjectCard({
             !px-5
             !py-5
 
-            sm:!px-6
-            sm:!py-6
+            sm:!px-3
+            sm:!py-2
           "
         >
           {/* TITLE */}
