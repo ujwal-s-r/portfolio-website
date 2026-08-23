@@ -260,6 +260,7 @@ export default function ProjectCard({
             min-h-0
             flex-1
             flex-col
+            justify-between
             p-3.5
             sm:p-4
           "
@@ -276,6 +277,8 @@ export default function ProjectCard({
           >
             <h3
               className="
+                h-[38px]
+                sm:h-[42px]
                 min-w-0
                 flex-1
                 font-serif
@@ -286,6 +289,7 @@ export default function ProjectCard({
                 text-white/95
                 sm:text-[15px]
                 line-clamp-2
+                overflow-hidden
               "
             >
               {project.title}
@@ -305,8 +309,8 @@ export default function ProjectCard({
             </span>
           </div>
 
-          {/* TECH STACK - Clean text without ugly pill boundaries */}
-          <div className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 font-mono text-[9.5px] sm:text-[11px] text-white/50">
+          {/* TECH STACK - Fixed uniform height slot across all cards */}
+          <div className="mt-3 flex h-[30px] sm:h-[34px] flex-wrap items-center content-start gap-x-1.5 gap-y-0.5 overflow-hidden font-mono text-[9.5px] sm:text-[11px] text-white/50">
             {project.techStack.slice(0, 4).map((tech, i) => (
               <span key={tech} className="inline-flex items-center">
                 {tech}

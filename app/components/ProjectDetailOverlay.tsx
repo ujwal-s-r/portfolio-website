@@ -24,6 +24,59 @@ function renderMarkdownText(text: string) {
   });
 }
 
+function renderImageItem(line: string, index: number) {
+  // Regex to extract ![caption](url)
+  const imgMatch = line.match(/^!\[(.*?)\]\((.*?)\)$/);
+  if (!imgMatch) return null;
+
+  const rawCaption = imgMatch[1] || "";
+  let src = imgMatch[2] || "";
+
+  // Check for size specified via caption ![Caption|small](url) or URL hash (url#small)
+  let size = "large";
+  let caption = rawCaption;
+
+  if (rawCaption.includes("|")) {
+    const parts = rawCaption.split("|");
+    caption = parts[0].trim();
+    size = parts[1].trim().toLowerCase();
+  } else if (src.includes("#")) {
+    const parts = src.split("#");
+    src = parts[0];
+    size = parts[1].toLowerCase();
+  }
+
+  // Size mapping
+  let sizeClass = "w-full";
+  if (size === "small" || size === "sm") {
+    sizeClass = "max-w-xs sm:max-w-sm";
+  } else if (size === "medium" || size === "md") {
+    sizeClass = "max-w-md sm:max-w-lg";
+  } else if (size === "large" || size === "lg") {
+    sizeClass = "w-full max-w-2xl";
+  } else if (size === "full") {
+    sizeClass = "w-full";
+  }
+
+  return (
+    <figure key={`img-${index}`} className={`my-8 mx-auto flex flex-col items-center ${sizeClass}`}>
+      <div className="w-full overflow-hidden rounded-xl border border-white/10 bg-[#080808]">
+        <img
+          src={src}
+          alt={caption || "Project diagram"}
+          className="w-full h-auto object-contain block"
+          loading="lazy"
+        />
+      </div>
+      {caption && (
+        <figcaption className="mt-2.5 text-center font-mono text-[11px] text-white/40">
+          {caption}
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
 const GithubIcon = () => (
   <svg
     className="h-4 w-4"
@@ -46,7 +99,7 @@ const LinkedinIcon = () => (
     viewBox="0 0 24 24"
     aria-hidden="true"
   >
-    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1-2.063-2.065 2.064 2.064 0 0 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
+    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
   </svg>
 );
 
@@ -61,15 +114,23 @@ export default function ProjectDetailOverlay({
       }
     };
 
+    // Lock background page scroll while overlay is open
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
+      document.body.style.overflow = originalBodyOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-[300] overflow-y-auto bg-black text-white">
+    <div className="fixed inset-0 z-[300] overflow-y-auto overscroll-contain bg-black text-white">
       {/* =========================================================
           TOP BAR
       ========================================================= */}
@@ -263,85 +324,50 @@ export default function ProjectDetailOverlay({
           <div className="mt-8 h-px w-full bg-white/[0.10]" />
 
           {/* =====================================================
-              CONTENT WITH BULLETS ALIGNED TO FIRST LINE
+              CONTENT (POINTS + CONFIGURABLE INLINE IMAGES)
           ===================================================== */}
           <section className="mt-8 space-y-6">
-            {project.points.map((point, index) => (
-              <div
-                key={`point-${index}`}
-                className="flex items-start gap-3.5"
-              >
-                {/*
-                  Bullet wrapper: height matches the paragraph's own
-                  line-box (font-size * line-height) at each breakpoint,
-                  then centers the dot inside via flex. This locks the
-                  dot to the vertical middle of the first line instead
-                  of relying on a guessed margin-top.
-                */}
-                <span
-                  className="
-                    flex
-                    h-[27px]
-                    w-1.5
-                    shrink-0
-                    items-center
-                    justify-center
-                    sm:h-[29.6px]
-                  "
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-white/90" />
-                </span>
+            {project.points.map((point, index) => {
+              // If this point is an image tag ![caption](url)
+              if (point.startsWith("![") || point.startsWith("<img") || point.startsWith("<image")) {
+                return renderImageItem(point, index);
+              }
 
-                {/* Point text */}
-                <p
-                  className="
-                    flex-1
-                    text-[15px]
-                    leading-[1.8]
-                    text-white/75
-                    sm:text-[16px]
-                    sm:leading-[1.85]
-                  "
+              // Otherwise render regular bullet point with aligned dot
+              return (
+                <div
+                  key={`point-${index}`}
+                  className="flex items-start gap-3.5"
                 >
-                  {renderMarkdownText(point)}
-                </p>
-              </div>
-            ))}
+                  <span
+                    className="
+                      flex
+                      h-[27px]
+                      w-1.5
+                      shrink-0
+                      items-center
+                      justify-center
+                      sm:h-[29.6px]
+                    "
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-white/90" />
+                  </span>
 
-            {/* ===================================================
-                TECH STACK
-            =================================================== */}
-            {project.techStack.length > 0 && (
-              <div className="flex items-start gap-3.5">
-                <span
-                  className="
-                    flex
-                    h-[27px]
-                    w-1.5
-                    shrink-0
-                    items-center
-                    justify-center
-                    sm:h-[29.6px]
-                  "
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-white/90" />
-                </span>
-
-                <p
-                  className="
-                    flex-1
-                    text-[15px]
-                    leading-[1.8]
-                    text-white/75
-                    sm:text-[16px]
-                    sm:leading-[1.85]
-                  "
-                >
-                  <strong className="font-bold text-white">Stack:</strong>{" "}
-                  {project.techStack.join(" · ")}
-                </p>
-              </div>
-            )}
+                  <p
+                    className="
+                      flex-1
+                      text-[15px]
+                      leading-[1.8]
+                      text-white/75
+                      sm:text-[16px]
+                      sm:leading-[1.85]
+                    "
+                  >
+                    {renderMarkdownText(point)}
+                  </p>
+                </div>
+              );
+            })}
           </section>
 
           {/* =====================================================

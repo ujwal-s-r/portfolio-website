@@ -56,7 +56,7 @@ function loadProjectsFrom(folder: string): ProjectItem[] {
       }
     });
 
-    // Extract bullet points from markdown body
+    // Extract bullet points & inline images from markdown body
     const rawLines = bodyContent
       .split("\n")
       .map((line) => line.trim())
@@ -66,7 +66,13 @@ function loadProjectsFrom(folder: string): ProjectItem[] {
     let currentPoint = "";
 
     rawLines.forEach((line) => {
-      if (
+      if (line.startsWith("![") || line.startsWith("<img") || line.startsWith("<image")) {
+        if (currentPoint) {
+          points.push(currentPoint);
+          currentPoint = "";
+        }
+        points.push(line);
+      } else if (
         line.startsWith("- ") ||
         line.startsWith("* ") ||
         line.startsWith("• ")
@@ -86,7 +92,7 @@ function loadProjectsFrom(folder: string): ProjectItem[] {
       points.push(currentPoint);
     }
 
-    // Look for a corresponding image file
+    // Look for a corresponding thumbnail image file
     const baseName = filename.replace(/\.md$/, "");
     const imageExts = [".png", ".jpg", ".jpeg", ".webp"];
     let imagePath: string | null = null;
@@ -104,9 +110,8 @@ function loadProjectsFrom(folder: string): ProjectItem[] {
       ? data.techStack.split(",").map((t) => t.trim())
       : [];
 
-    const description =
-      data.description ||
-      (points.length > 0 ? points[0] : "");
+    const firstTextPoint = points.find((p) => !p.startsWith("![") && !p.startsWith("<")) || "";
+    const description = data.description || firstTextPoint;
 
     return {
       id: baseName,

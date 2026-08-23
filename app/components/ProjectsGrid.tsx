@@ -31,11 +31,11 @@ export default function ProjectsGrid({
         }}
       >
         {/* Desktop: 3-column parent grid | Mobile: Stacked sections with 2 cards side-by-side */}
-        <div className="flex flex-col gap-10 xl:grid xl:grid-cols-3 xl:gap-5">
+        <div className="flex flex-col gap-10 xl:grid xl:grid-cols-3 xl:gap-0">
           {/* ===================================================
               PROJECTS SECTION (2 cards side by side on mobile)
           =================================================== */}
-          <section className="xl:col-span-2">
+          <section className="xl:col-span-2 xl:border-r xl:border-white/15 xl:pr-6">
             <div className="mb-4 flex min-h-8 items-center gap-4">
               <h2 className="whitespace-nowrap font-serif text-xl font-normal tracking-tight text-white/95 sm:text-2xl">
                 Projects
@@ -58,7 +58,7 @@ export default function ProjectsGrid({
           {/* ===================================================
               RESEARCH SECTION (Placed after Projects)
           =================================================== */}
-          <section className="xl:col-span-1">
+          <section className="xl:col-span-1 xl:pl-6">
             <div className="mb-4 flex min-h-8 items-center gap-3">
               <h2 className="font-serif text-xl font-normal leading-tight tracking-tight text-white/95 sm:text-2xl xl:text-xl 2xl:text-2xl">
                 Research Implementations

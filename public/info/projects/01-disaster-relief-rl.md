@@ -1,5 +1,5 @@
 ---
-title: "Disaster Relief RL Environment for Multi-Agent RL Training"
+title: "Multi Agent RL env for disaster relief (Meta Hackathon)"
 tag: "Multi-Agent RL"
 techStack: "OpenEnv, FastAPI, Docker, Python"
 order: 1
