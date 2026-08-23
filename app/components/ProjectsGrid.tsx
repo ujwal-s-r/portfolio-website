@@ -5,26 +5,16 @@ import ProjectCard from "./ProjectCard";
 
 interface ProjectsGridProps {
   projects: ProjectItem[];
+  research: ProjectItem[];
   compressed?: boolean;
 }
 
 export default function ProjectsGrid({
   projects,
+  research,
   compressed = false,
 }: ProjectsGridProps) {
-  if (projects.length === 0) return null;
-
-  const researchTags = new Set([
-    "Multi-Agent RL",
-    "Deep Learning",
-    "Computer Vision",
-  ]);
-  const productProjects = projects.filter(
-    (project) => !researchTags.has(project.tag),
-  );
-  const researchProjects = projects.filter((project) =>
-    researchTags.has(project.tag),
-  );
+  if (projects.length === 0 && research.length === 0) return null;
 
   return (
     <div
@@ -44,7 +34,7 @@ export default function ProjectsGrid({
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {productProjects.map((project, index) => (
+            {projects.map((project, index) => (
               <ProjectCard
                 key={project.id}
                 project={project}
@@ -63,11 +53,11 @@ export default function ProjectsGrid({
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-1">
-            {researchProjects.map((project, index) => (
+            {research.map((project, index) => (
               <ProjectCard
                 key={project.id}
                 project={project}
-                index={productProjects.length + index}
+                index={projects.length + index}
               />
             ))}
           </div>

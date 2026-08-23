@@ -3,11 +3,12 @@ import PageNavigator from "./components/PageNavigator";
 import HeroSection from "./components/HeroSection";
 import { SECTIONS } from "./data/sections";
 import { getExperiences } from "./lib/experience";
-import { getProjects } from "./lib/projects";
+import { getProjects, getResearch } from "./lib/projects";
 
 export default function Home() {
   const experiences = getExperiences();
   const projects = getProjects();
+  const research = getResearch();
 
   return (
     <main className="min-h-screen bg-black text-white relative overflow-x-hidden">
@@ -40,6 +41,7 @@ export default function Home() {
           <HeroSection
             experiences={experiences}
             projects={projects}
+            research={research}
           />
         </section>
 

@@ -16,8 +16,8 @@ export interface ProjectItem {
   image: string | null; // path to image in /info/projects/ or null
 }
 
-export function getProjects(): ProjectItem[] {
-  const projDir = path.join(process.cwd(), "public", "info", "projects");
+function loadProjectsFrom(folder: string): ProjectItem[] {
+  const projDir = path.join(process.cwd(), "public", "info", folder);
 
   if (!fs.existsSync(projDir)) {
     return [];
@@ -93,7 +93,7 @@ export function getProjects(): ProjectItem[] {
     for (const ext of imageExts) {
       const imgFile = path.join(projDir, baseName + ext);
       if (fs.existsSync(imgFile)) {
-        imagePath = `/info/projects/${baseName}${ext}`;
+        imagePath = `/info/${folder}/${baseName}${ext}`;
         break;
       }
     }
@@ -124,4 +124,12 @@ export function getProjects(): ProjectItem[] {
   });
 
   return projects.sort((a, b) => a.order - b.order);
+}
+
+export function getProjects(): ProjectItem[] {
+  return loadProjectsFrom("projects");
+}
+
+export function getResearch(): ProjectItem[] {
+  return loadProjectsFrom("research");
 }

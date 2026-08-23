@@ -82,7 +82,7 @@ export default function ProjectCard({
             bg-[#050505]
           "
           style={{
-            aspectRatio: "16 / 9",
+            aspectRatio: "2 / 1",
           }}
         >
           {hasImage ? (
@@ -279,14 +279,16 @@ export default function ProjectCard({
             <h3
               className="
                 min-w-0
+                min-h-[36px]
                 flex-1
                 font-serif
-                text-[17px]
+                text-[14px]
                 font-medium
-                leading-[1.25]
+                leading-[1.3]
                 tracking-tight
                 text-white/95
-                sm:text-[18px]
+                sm:min-h-[39px]
+                sm:text-[15px]
               "
             >
               {project.title}
@@ -306,30 +308,16 @@ export default function ProjectCard({
             </span>
           </div>
 
-          {/* DESCRIPTION */}
-          <p
-            className="
-              mt-3
-              line-clamp-2
-              w-full
-              text-[12px]
-              leading-[1.55]
-              text-white/55
-              sm:text-[13px]
-            "
-          >
-            {project.description}
-          </p>
-
           {/* TECH STACK */}
           <div
             className="
               mt-4
               flex
+              h-[26px]
               w-full
-              flex-wrap
               items-center
               gap-1.5
+              overflow-hidden
             "
           >
             {project.techStack.slice(0, 4).map((tech) => (

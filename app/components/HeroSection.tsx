@@ -10,11 +10,13 @@ import type { ProjectItem } from "../lib/projects";
 interface HeroSectionProps {
   experiences: ExperienceItem[];
   projects: ProjectItem[];
+  research: ProjectItem[];
 }
 
 export default function HeroSection({
   experiences,
   projects,
+  research,
 }: HeroSectionProps) {
   const [experienceHovered, setExperienceHovered] = useState(false);
 
@@ -72,6 +74,7 @@ export default function HeroSection({
         <div className="w-full min-w-0 self-start">
           <ProjectsGrid
             projects={projects}
+            research={research}
             compressed={experienceHovered}
           />
         </div>
