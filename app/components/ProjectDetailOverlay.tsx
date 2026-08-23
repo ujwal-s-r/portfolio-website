@@ -263,58 +263,108 @@ export default function ProjectDetailOverlay({
                 {project.title}
               </h1>
 
-              {/* GITHUB + LINKEDIN BESIDE TITLE */}
-              <div className="mt-2 flex shrink-0 items-center gap-2">
-                <a
-                  href={project.github || "https://github.com"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Open GitHub repository"
-                  className="
-                    flex
-                    h-8
-                    w-8
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                    border-white/[0.14]
-                    text-white/50
-                    transition-colors
-                    duration-200
-                    hover:border-white/30
-                    hover:bg-white/[0.05]
-                    hover:text-white
-                  "
-                >
-                  <GithubIcon />
-                </a>
+              {/* GITHUB + LINKEDIN + LIVE LINK BESIDE TITLE */}
+              {(project.github || project.linkedin || project.link) && (
+                <div className="mt-2 flex shrink-0 items-center gap-2">
+                  {project.github && (
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Open GitHub repository"
+                      className="
+                        flex
+                        h-8
+                        w-8
+                        items-center
+                        justify-center
+                        rounded-full
+                        border
+                        border-white/[0.14]
+                        text-white/50
+                        transition-colors
+                        duration-200
+                        hover:border-white/30
+                        hover:bg-white/[0.05]
+                        hover:text-white
+                      "
+                    >
+                      <GithubIcon />
+                    </a>
+                  )}
 
-                <a
-                  href={project.linkedin || "https://linkedin.com"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Open LinkedIn"
-                  className="
-                    flex
-                    h-8
-                    w-8
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                    border-white/[0.14]
-                    text-white/50
-                    transition-colors
-                    duration-200
-                    hover:border-white/30
-                    hover:bg-white/[0.05]
-                    hover:text-white
-                  "
-                >
-                  <LinkedinIcon />
-                </a>
-              </div>
+                  {project.linkedin && (
+                    <a
+                      href={project.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Open LinkedIn"
+                      className="
+                        flex
+                        h-8
+                        w-8
+                        items-center
+                        justify-center
+                        rounded-full
+                        border
+                        border-white/[0.14]
+                        text-white/50
+                        transition-colors
+                        duration-200
+                        hover:border-white/30
+                        hover:bg-white/[0.05]
+                        hover:text-white
+                      "
+                    >
+                      <LinkedinIcon />
+                    </a>
+                  )}
+
+                  {project.link && (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Open Live Demo"
+                      className="
+                        flex
+                        h-8
+                        w-8
+                        items-center
+                        justify-center
+                        rounded-full
+                        border
+                        border-white/[0.14]
+                        text-white/50
+                        transition-colors
+                        duration-200
+                        hover:border-white/30
+                        hover:bg-white/[0.05]
+                        hover:text-white
+                      "
+                    >
+                      <svg
+                        className="h-3.5 w-3.5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={1.8}
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M10 13a5 5 0 007.07 0l2-2a5 5 0 00-7.07-7.07l-1.15 1.15"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14 11a5 5 0 00-7.07 0l-2 2A5 5 0 0012 20.07l1.15-1.15"
+                        />
+                      </svg>
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           </header>
 

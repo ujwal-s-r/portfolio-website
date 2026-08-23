@@ -2,7 +2,7 @@
 title: "Agentic AI Self-Healing CI/CD Pipeline"
 tag: "Agentic AI"
 techStack: "Qwen-2.5-Coder, MCP, GraphDB, GitHub Actions, WebSocket"
-order: 3
+order: 2
 featured: false
 github: "https://github.com/ujwal-s-r/Agentic_devops_pipeline"
 linkedin: "https://www.linkedin.com/posts/ujwal-s-r_agenticai-devops-selfhealing-activity-7397713913297068032-6068?utm_source=share&utm_medium=member_desktop&rcm=ACoAADiIsXsBNBsFrLNboWTH9QZPP6E2zjEsS3E"
