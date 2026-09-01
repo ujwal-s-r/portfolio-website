@@ -7,10 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:seed": "tsx backend/db/seed.ts"
+    "db:seed": "tsx backend/db/seed.ts",
+    "blob:migrate": "tsx backend/offload_to_blob.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.17.4",
+    "@vercel/blob": "^2.8.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "framer-motion": "^13.1.1",
