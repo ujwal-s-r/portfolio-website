@@ -48,6 +48,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="preconnect"
+          href="https://ps2zjncditdyfyag.public.blob.vercel-storage.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="dns-prefetch"
+          href="https://ps2zjncditdyfyag.public.blob.vercel-storage.com"
+        />
+      </head>
       <body className="bg-black min-h-screen">{children}</body>
     </html>
   );
