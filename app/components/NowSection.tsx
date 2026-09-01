@@ -38,8 +38,7 @@ export default function NowSection({
               key={item.id}
               className="
                 relative flex items-stretch w-full cursor-pointer group select-none touch-manipulation
-                p-2 -mx-2 sm:p-2.5 sm:-mx-2.5 rounded-xl transition-colors duration-150
-                hover:bg-white/[0.03] active:bg-white/[0.06]
+                transition-colors duration-150
               "
               onPointerEnter={(e) => {
                 if (e.pointerType !== "touch") setActiveItemId(item.id);
@@ -207,8 +206,7 @@ export default function NowSection({
                     key={group.id}
                     className="
                       relative flex items-stretch w-full cursor-pointer group select-none touch-manipulation
-                      p-2 -mx-2 sm:p-2.5 sm:-mx-2.5 rounded-xl transition-colors duration-150
-                      hover:bg-white/[0.03] active:bg-white/[0.06]
+                      transition-colors duration-150
                     "
                     onPointerEnter={(e) => {
                       if (e.pointerType !== "touch") setActiveItemId(group.id);
