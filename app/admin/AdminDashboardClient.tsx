@@ -303,22 +303,32 @@ export default function AdminDashboardClient({
         if (activeTab === "projects") {
           setProjectsList((prev) => {
             const idx = prev.findIndex((p) => p.id === payload.id || p.id === payload.slug);
+            const item: ProjectItem = {
+              ...payload,
+              id: payload.slug,
+              order: payload.orderIndex,
+            };
             if (idx >= 0) {
               const updated = [...prev];
-              updated[idx] = { ...payload, id: payload.slug };
+              updated[idx] = item;
               return updated;
             }
-            return [...prev, { ...payload, id: payload.slug }];
+            return [...prev, item];
           });
         } else {
           setResearchList((prev) => {
             const idx = prev.findIndex((p) => p.id === payload.id || p.id === payload.slug);
+            const item: ProjectItem = {
+              ...payload,
+              id: payload.slug,
+              order: payload.orderIndex,
+            };
             if (idx >= 0) {
               const updated = [...prev];
-              updated[idx] = { ...payload, id: payload.slug };
+              updated[idx] = item;
               return updated;
             }
-            return [...prev, { ...payload, id: payload.slug }];
+            return [...prev, item];
           });
         }
       } else if (activeTab === "experience") {
