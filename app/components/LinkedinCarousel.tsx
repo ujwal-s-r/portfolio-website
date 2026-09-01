@@ -111,8 +111,13 @@ export default function LinkedinCarousel({ posts }: LinkedinCarouselProps) {
     };
   }, [progress, spacing, damping]);
 
+  const isDraggingRef = useRef(false);
+  const panDistanceRef = useRef(0);
+
   // Drag and Momentum Physics
   const handlePanStart = () => {
+    isDraggingRef.current = true;
+    panDistanceRef.current = 0;
     progress.stop();
   };
 
@@ -120,6 +125,7 @@ export default function LinkedinCarousel({ posts }: LinkedinCarouselProps) {
     _: MouseEvent | TouchEvent | PointerEvent,
     info: { delta: { y: number } }
   ) => {
+    panDistanceRef.current += Math.abs(info.delta.y);
     progress.set(progress.get() - info.delta.y / spacing);
   };
 
@@ -127,6 +133,11 @@ export default function LinkedinCarousel({ posts }: LinkedinCarouselProps) {
     _: MouseEvent | TouchEvent | PointerEvent,
     info: { velocity: { y: number } }
   ) => {
+    setTimeout(() => {
+      isDraggingRef.current = false;
+      panDistanceRef.current = 0;
+    }, 50);
+
     const velocity = -info.velocity.y / spacing;
     const target = progress.get() + velocity * 0.15;
     const snapped = Math.round(target);
@@ -138,16 +149,13 @@ export default function LinkedinCarousel({ posts }: LinkedinCarouselProps) {
     });
   };
 
-  // Click to snap or open link
-  const snapToIndex = (clickedIndex: number, link?: string) => {
+  // Tap safely snaps index without accidental navigation
+  const snapToIndex = (clickedIndex: number) => {
+    if (panDistanceRef.current > 6) return;
+
     const currentP = progress.get();
     const currentIdx = Math.round(currentP);
     const d = wrap(-N / 2, N / 2, clickedIndex - currentIdx);
-
-    if (Math.abs(d) < 0.3 && link) {
-      window.open(link, "_blank");
-      return;
-    }
 
     const targetP = currentIdx + d;
     animate(progress, targetP, {
@@ -236,7 +244,7 @@ export default function LinkedinCarousel({ posts }: LinkedinCarouselProps) {
         onTouchStart={() => setIsPaused(true)}
         onTouchEnd={() => setIsPaused(false)}
         className="relative h-[480px] w-full select-none overflow-hidden rounded-2xl border border-white/15 bg-[#050505] shadow-[0_8px_32px_rgba(0,0,0,0.8)]"
-        style={{ touchAction: "none" }}
+        style={{ touchAction: "pan-y" }}
       >
         {/* Dynamic ambient blur backdrop */}
         {items.map((item, i) => (
@@ -271,7 +279,7 @@ export default function LinkedinCarousel({ posts }: LinkedinCarouselProps) {
                 cardHeight={cardHeight}
                 overlayOpacity={overlayOpacity}
                 wrap={wrap}
-                onTap={() => snapToIndex(i, item.link)}
+                onTap={() => snapToIndex(i)}
               />
             ))}
           </div>
@@ -280,8 +288,8 @@ export default function LinkedinCarousel({ posts }: LinkedinCarouselProps) {
 
       {/* Hint underneath */}
       <div className="mt-3 flex items-center justify-between px-1 font-mono text-[9.5px] text-white/30">
-        <span>Scroll or drag cards vertically</span>
-        <span>Tap active card to open</span>
+        <span>Scroll or drag vertically</span>
+        <span>Tap button to view on LinkedIn</span>
       </div>
     </div>
   );
@@ -448,7 +456,7 @@ function CarouselItem({
           </p>
         </div>
 
-        {/* Bottom index and LinkedIn icon indicator */}
+        {/* Bottom index and LinkedIn interactive action button */}
         <div
           style={{
             display: "flex",
@@ -456,29 +464,57 @@ function CarouselItem({
             alignItems: "flex-end",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              fontSize: 10,
-              fontWeight: 600,
-              letterSpacing: "0.1em",
-              padding: "5px 10px",
-              background: "rgba(10, 102, 194, 0.4)",
-              backdropFilter: "blur(10px)",
-              border: "1px solid rgba(10, 102, 194, 0.5)",
-              borderRadius: 20,
-            }}
-          >
-            <svg
-              style={{ width: 12, height: 12, fill: "currentColor" }}
-              viewBox="0 0 24 24"
+          {item.link ? (
+            <button
+              type="button"
+              aria-label="Open post on LinkedIn"
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(item.link, "_blank");
+              }}
+              className="
+                group/btn flex items-center gap-1.5
+                rounded-full border border-sky-400/40
+                bg-[#0A66C2]/60 px-3 py-1.5
+                font-mono text-[10px] font-semibold tracking-wider text-white
+                backdrop-blur-md transition-all duration-150
+                hover:border-sky-300 hover:bg-[#0A66C2] active:scale-95
+                cursor-pointer shadow-lg
+              "
             >
-              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-            </svg>
-            <span>POST</span>
-          </div>
+              <svg
+                className="w-3 h-3 fill-current transition-transform group-hover/btn:scale-110"
+                viewBox="0 0 24 24"
+              >
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+              </svg>
+              <span>POST ↗</span>
+            </button>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                fontSize: 10,
+                fontWeight: 600,
+                letterSpacing: "0.1em",
+                padding: "5px 10px",
+                background: "rgba(10, 102, 194, 0.4)",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(10, 102, 194, 0.5)",
+                borderRadius: 20,
+              }}
+            >
+              <svg
+                style={{ width: 12, height: 12, fill: "currentColor" }}
+                viewBox="0 0 24 24"
+              >
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+              </svg>
+              <span>POST</span>
+            </div>
+          )}
 
           <div
             style={{

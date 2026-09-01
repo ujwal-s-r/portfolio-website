@@ -29,7 +29,7 @@ export default function ProjectCard({
       "
       initial={{
         opacity: 0,
-        y: 12,
+        y: 10,
       }}
       whileInView={{
         opacity: 1,
@@ -40,12 +40,12 @@ export default function ProjectCard({
         amount: 0.15,
       }}
       transition={{
-        duration: 0.55,
-        delay: Math.min(index * 0.05, 0.2),
+        duration: 0.45,
+        delay: Math.min(index * 0.04, 0.2),
         ease: [0.22, 1, 0.36, 1],
       }}
       whileHover={{
-        scale: 1.035,
+        scale: 1.025,
         zIndex: 30,
       }}
       style={{
@@ -53,7 +53,7 @@ export default function ProjectCard({
       }}
     >
       {/* =========================================================
-          CARD
+          CARD CONTAINER
       ========================================================= */}
       <div
         className="
@@ -65,7 +65,7 @@ export default function ProjectCard({
           overflow-hidden
           rounded-xl
           border
-          border-white/[0.14]
+          border-white/[0.12]
           bg-black
           transition-[border-color]
           duration-200
@@ -74,7 +74,7 @@ export default function ProjectCard({
         "
       >
         {/* =======================================================
-            IMAGE
+            IMAGE PREVIEW (COMPACT)
         ======================================================= */}
         <div
           className="
@@ -83,10 +83,8 @@ export default function ProjectCard({
             shrink-0
             overflow-hidden
             bg-[#050505]
+            aspect-[2.1/1]
           "
-          style={{
-            aspectRatio: "2 / 1",
-          }}
         >
           {hasImage ? (
             <img
@@ -101,7 +99,7 @@ export default function ProjectCard({
                 transition-transform
                 duration-500
                 ease-[cubic-bezier(0.22,1,0.36,1)]
-                group-hover:scale-[1.025]
+                group-hover:scale-[1.03]
               "
             />
           ) : (
@@ -118,7 +116,7 @@ export default function ProjectCard({
               <span
                 className="
                   font-mono
-                  text-[10px]
+                  text-[9px]
                   uppercase
                   tracking-[0.2em]
                   text-white/25
@@ -129,28 +127,44 @@ export default function ProjectCard({
             </div>
           )}
 
-          {/* Image fade */}
+          {/* Image fade gradient */}
           <div
             className="
               pointer-events-none
               absolute
               inset-0
               bg-gradient-to-t
-              from-black/30
+              from-black/40
               via-transparent
               to-transparent
             "
           />
 
           {/* =====================================================
-              ACTION BUTTONS (Only rendered when links exist)
+              BLINKING GREEN ONGOING / LIVE BADGE
+          ===================================================== */}
+          {project.ongoing && (
+            <div className="absolute left-2 top-2 z-20 flex items-center gap-1.5 rounded-full border border-emerald-500/35 bg-black/85 px-2 py-0.5 backdrop-blur-md shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-80" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              </span>
+              <span className="font-mono text-[8.5px] uppercase tracking-[0.14em] font-medium text-emerald-400">
+                Ongoing
+              </span>
+            </div>
+          )}
+
+          {/* =====================================================
+              ACTION BUTTONS (TOP RIGHT ON HOVER)
           ===================================================== */}
           {(project.github || project.linkedin || project.link) && (
             <div
               className="
                 absolute
-                right-3
-                top-3
+                right-2.5
+                top-2.5
+                z-20
                 flex
                 items-center
                 gap-1.5
@@ -173,8 +187,8 @@ export default function ProjectCard({
                   }}
                   className="
                     flex
-                    h-7
-                    w-7
+                    h-6
+                    w-6
                     items-center
                     justify-center
                     rounded-full
@@ -189,7 +203,7 @@ export default function ProjectCard({
                   "
                 >
                   <svg
-                    className="h-3.5 w-3.5"
+                    className="h-3 w-3"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -212,8 +226,8 @@ export default function ProjectCard({
                   }}
                   className="
                     flex
-                    h-7
-                    w-7
+                    h-6
+                    w-6
                     items-center
                     justify-center
                     rounded-full
@@ -228,7 +242,7 @@ export default function ProjectCard({
                   "
                 >
                   <svg
-                    className="h-3.5 w-3.5"
+                    className="h-3 w-3"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -247,8 +261,8 @@ export default function ProjectCard({
                   }}
                   className="
                     flex
-                    h-7
-                    w-7
+                    h-6
+                    w-6
                     items-center
                     justify-center
                     rounded-full
@@ -263,7 +277,7 @@ export default function ProjectCard({
                   "
                 >
                   <svg
-                    className="h-3.5 w-3.5"
+                    className="h-3 w-3"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth={1.8}
@@ -287,7 +301,7 @@ export default function ProjectCard({
         </div>
 
         {/* =========================================================
-            CONTENT
+            CONTENT (COMPACT)
         ========================================================= */}
         <div
           className="
@@ -296,11 +310,11 @@ export default function ProjectCard({
             flex-1
             flex-col
             justify-between
-            p-3.5
-            sm:p-2
+            p-2.5
+            sm:p-2.5
           "
         >
-          {/* TITLE */}
+          {/* TITLE & INDEX */}
           <div
             className="
               flex
@@ -312,20 +326,19 @@ export default function ProjectCard({
           >
             <h3
               className="
-                h-[52px]
-                sm:h-[42px]
+                h-[36px]
+                sm:h-[38px]
                 min-w-0
                 flex-1
                 font-serif
-                text-[12px]
+                text-[11.5px]
                 font-medium
-                leading-[1.28]
+                leading-[1.26]
                 tracking-tight
                 text-white/95
-                sm:text-[14.5px]
-                sm:leading-[1.3]
-                line-clamp-3
-                sm:line-clamp-2
+                sm:text-[13px]
+                sm:leading-[1.28]
+                line-clamp-2
                 overflow-hidden
               "
             >
@@ -335,10 +348,9 @@ export default function ProjectCard({
             <span
               className="
                 shrink-0
-                pt-0.3
                 font-mono
-                text-[9px]
-                tracking-[0.18em]
+                text-[8.5px]
+                tracking-[0.16em]
                 text-white/30
               "
             >
@@ -346,8 +358,8 @@ export default function ProjectCard({
             </span>
           </div>
 
-          {/* TECH STACK - Fixed uniform height slot across all cards */}
-          <div className="mt-3 flex h-[30px] sm:h-[34px] flex-wrap items-center content-start gap-x-1.5 gap-y-0.5 overflow-hidden font-mono text-[9.5px] sm:text-[11px] text-white/50">
+          {/* TECH STACK - Compact uniform slot */}
+          <div className="mt-2 flex h-[22px] sm:h-[24px] flex-wrap items-center content-start gap-x-1.5 gap-y-0.5 overflow-hidden font-mono text-[9px] sm:text-[10px] text-white/50">
             {project.techStack.slice(0, 4).map((tech, i) => (
               <span key={tech} className="inline-flex items-center">
                 {tech}

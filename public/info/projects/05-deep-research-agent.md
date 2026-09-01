@@ -4,6 +4,7 @@ tag: "Agentic AI"
 techStack: "Python, LangChain, Supabase, Vector DB, Google-OAuth"
 order: 5
 featured: false
+status: "ongoing"
 github: ""
 linkedin: ""
 link: ""

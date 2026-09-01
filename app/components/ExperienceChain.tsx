@@ -258,25 +258,28 @@ export default function ExperienceChain({
                       className="
                         inline-flex
                         items-center
-                        gap-1
-                        font-medium
-                        text-xs
+                        gap-1.5
+                        font-semibold
+                        text-[12px]
+                        md:text-[13px]
+                        transition-colors
+                        duration-200
                       "
                       style={{
                         color: isHovered
-                          ? "#ffffff"
-                          : "rgba(255,255,255,0.45)",
+                          ? "#34d399"
+                          : "rgba(255,255,255,0.75)",
                       }}
                     >
-                      Key Work
+                      <span>Expand for Details</span>
 
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                         className="
-                          w-3.5
-                          h-3.5
+                          w-4
+                          h-4
                           transition-transform
                           duration-500
                         "

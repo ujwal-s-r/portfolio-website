@@ -22,12 +22,12 @@ export default function ProjectsGrid({
 
   if (projects.length === 0 && research.length === 0) return null;
 
-  // 2 rows default: 4 projects (2x2) and 2 research items
+  // Default visible cards: up to 4 research items (2x2) and 4 projects (2x2)
+  const visibleResearch = research.slice(0, 4);
+  const extraResearch = research.slice(4);
+
   const visibleProjects = projects.slice(0, 4);
   const extraProjects = projects.slice(4);
-
-  const visibleResearch = research.slice(0, 2);
-  const extraResearch = research.slice(2);
 
   const hasExtra = extraProjects.length > 0 || extraResearch.length > 0;
 
@@ -52,86 +52,28 @@ export default function ProjectsGrid({
         }}
       >
         {/* =======================================================
-            3-PART GRID: Projects (2fr) | Vertical Line | Research (1fr)
-            Both columns match card heights exactly.
+            3-PART GRID: Research (Left) | Vertical Line | Projects (Right)
+            Both sides equal width (1fr : 1fr) for maximum compactness
         ======================================================= */}
-        <div className="flex flex-col gap-10 xl:grid xl:grid-cols-[2fr_auto_1fr] xl:items-stretch xl:gap-0">
+        <div className="flex flex-col gap-10 xl:grid xl:grid-cols-[1fr_auto_1fr] xl:items-stretch xl:gap-0">
           {/* ===================================================
-              PROJECTS SECTION (Left 2fr)
+              RESEARCH SECTION (Left Side)
           =================================================== */}
           <section className="flex flex-col xl:pr-6">
-            <div className="mb-4 flex min-h-8 items-center gap-4">
-              <h2 className="whitespace-nowrap font-serif text-xl font-normal tracking-tight text-white/95 sm:text-2xl">
-                Projects
+            <div className="mb-3.5 flex min-h-8 items-center gap-3">
+              <h2 className="font-serif text-xl font-normal leading-tight tracking-tight text-white/95 sm:text-2xl">
+                Research Implementations
               </h2>
               <div className="h-px flex-1 bg-white/15" aria-hidden="true" />
             </div>
 
-            {/* Default 2 Rows (up to 4 cards) */}
-            <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              {visibleProjects.map((project, index) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  index={index}
-                  onOpen={setSelected}
-                />
-              ))}
-            </div>
-
-            {/* Extra Projects Animated Drawer */}
-            <AnimatePresence>
-              {isExpanded && extraProjects.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                  className="overflow-hidden"
-                >
-                  <div className="grid grid-cols-2 gap-3 pt-3 sm:gap-4 sm:pt-4">
-                    {extraProjects.map((project, index) => (
-                      <ProjectCard
-                        key={project.id}
-                        project={project}
-                        index={visibleProjects.length + index}
-                        onOpen={setSelected}
-                      />
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </section>
-
-          {/* ===================================================
-              DYNAMIC VERTICAL DIVIDER LINE
-              Stops exactly at the 2nd row in closed state,
-              and extends downward only when expanded!
-          =================================================== */}
-          <div
-            className="hidden xl:block w-px bg-white/15 self-stretch transition-all duration-300"
-            aria-hidden="true"
-          />
-
-          {/* ===================================================
-              RESEARCH SECTION (Right 1fr)
-          =================================================== */}
-          <section className="flex flex-col xl:pl-6">
-            <div className="mb-4 flex min-h-8 items-center gap-3">
-              <h2 className="font-serif text-xl font-normal leading-tight tracking-tight text-white/95 sm:text-2xl xl:text-xl 2xl:text-2xl">
-                Research Implementations
-              </h2>
-              <div className="hidden h-px flex-1 bg-white/15 2xl:block" aria-hidden="true" />
-            </div>
-
-            {/* Default 2 Rows (2 cards in 1-col layout) */}
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-1">
+            {/* 2-Column Grid (Shows up to 4 research cards) */}
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
               {visibleResearch.map((project, index) => (
                 <ProjectCard
                   key={project.id}
                   project={project}
-                  index={projects.length + index}
+                  index={index}
                   onOpen={setSelected}
                 />
               ))}
@@ -147,12 +89,73 @@ export default function ProjectsGrid({
                   transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                   className="overflow-hidden"
                 >
-                  <div className="grid grid-cols-2 gap-3 pt-3 sm:gap-4 sm:pt-4 xl:grid-cols-1">
+                  <div className="grid grid-cols-2 gap-2.5 pt-2.5 sm:gap-3.5 sm:pt-3.5">
                     {extraResearch.map((project, index) => (
                       <ProjectCard
                         key={project.id}
                         project={project}
-                        index={projects.length + visibleResearch.length + index}
+                        index={visibleResearch.length + index}
+                        onOpen={setSelected}
+                      />
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </section>
+
+          {/* ===================================================
+              DYNAMIC VERTICAL DIVIDER LINE
+          =================================================== */}
+          <div
+            className="hidden xl:block w-px bg-white/15 self-stretch transition-all duration-300"
+            aria-hidden="true"
+          />
+
+          {/* ===================================================
+              PROJECTS SECTION (Right Side)
+          =================================================== */}
+          <section className="flex flex-col xl:pl-6">
+            <div className="mb-3.5 flex min-h-8 items-center gap-4">
+              <h2 className="whitespace-nowrap font-serif text-xl font-normal tracking-tight text-white/95 sm:text-2xl">
+                Projects
+              </h2>
+              <div className="h-px flex-1 bg-white/15" aria-hidden="true" />
+            </div>
+
+            {/* 2-Column Grid (Shows up to 4 project cards) */}
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
+              {visibleProjects.map((project, index) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  index={visibleResearch.length + extraResearch.length + index}
+                  onOpen={setSelected}
+                />
+              ))}
+            </div>
+
+            {/* Extra Projects Animated Drawer */}
+            <AnimatePresence>
+              {isExpanded && extraProjects.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  className="overflow-hidden"
+                >
+                  <div className="grid grid-cols-2 gap-2.5 pt-2.5 sm:gap-3.5 sm:pt-3.5">
+                    {extraProjects.map((project, index) => (
+                      <ProjectCard
+                        key={project.id}
+                        project={project}
+                        index={
+                          visibleResearch.length +
+                          extraResearch.length +
+                          visibleProjects.length +
+                          index
+                        }
                         onOpen={setSelected}
                       />
                     ))}
@@ -164,7 +167,7 @@ export default function ProjectsGrid({
         </div>
 
         {/* =======================================================
-            EXPAND MORE BUTTON (Pure Click-Based Toggle)
+            EXPAND MORE BUTTON
         ======================================================= */}
         {hasExtra && (
           <div className="mt-6 flex items-center justify-start">
