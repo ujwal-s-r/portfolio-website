@@ -44,6 +44,16 @@ export default function LinkedinCarousel({ posts }: LinkedinCarouselProps) {
 
   const [isPaused, setIsPaused] = useState(false);
 
+  // Preload all carousel images in parallel in background cache
+  useEffect(() => {
+    userItems.forEach((item) => {
+      if (item.image) {
+        const img = document.createElement("img");
+        img.src = item.image;
+      }
+    });
+  }, [userItems]);
+
   // Auto Play functionality (2-second interval)
   useEffect(() => {
     if (isPaused || N === 0) return;

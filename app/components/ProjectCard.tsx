@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import type { ProjectItem } from "../lib/projects";
 import { getBlobUrl } from "../lib/blob";
 
@@ -77,7 +78,7 @@ export default function ProjectCard({
         "
       >
         {/* =======================================================
-            IMAGE PREVIEW (COMPACT)
+            IMAGE PREVIEW (COMPACT & NEXT/IMAGE ACCELERATED)
         ======================================================= */}
         <div
           className="
@@ -90,14 +91,14 @@ export default function ProjectCard({
           "
         >
           {hasImage ? (
-            <img
+            <Image
               src={getBlobUrl(project.image!)}
               alt={project.title}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              priority={index < 4}
               loading={index < 4 ? "eager" : "lazy"}
               className="
-                block
-                h-full
-                w-full
                 object-cover
                 transition-transform
                 duration-500
