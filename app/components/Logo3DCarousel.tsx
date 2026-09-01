@@ -22,23 +22,25 @@ interface Logo3DCarouselProps {
   enableDrag?: boolean;
 }
 
+import { getBlobUrl } from "@/app/lib/blob";
+
 const LOCAL_LOGOS: LogoItem[] = [
-  { name: "OpenAI", image: "/info/logos/openai.svg" },
-  { name: "Anthropic", image: "/info/logos/anthropic.svg" },
-  { name: "Google", image: "/info/logos/google.svg" },
-  { name: "DeepMind", image: "/info/logos/deepmind.svg" },
-  { name: "Meta", image: "/info/logos/meta.svg" },
-  { name: "Hugging Face", image: "/info/logos/huggingface.svg" },
-  { name: "NVIDIA", image: "/info/logos/nvidia.svg" },
-  { name: "AMD", image: "/info/logos/amd.svg" },
-  { name: "TSMC", image: "/info/logos/tsmc.svg" },
-  { name: "ASML", image: "/info/logos/asml.svg" },
-  { name: "Figure AI", image: "/info/logos/figure.svg" },
-  { name: "Databricks", image: "/info/logos/databricks.svg" },
-  { name: "Tesla", image: "/info/logos/tesla.svg" },
-  { name: "SpaceX", image: "/info/logos/spacex.svg" },
-  { name: "AWS", image: "/info/logos/aws.svg" },
-  { name: "Maersk", image: "/info/logos/maersk.svg" },
+  { name: "OpenAI", image: getBlobUrl("/info/logos/openai.svg") },
+  { name: "Anthropic", image: getBlobUrl("/info/logos/anthropic.svg") },
+  { name: "Google", image: getBlobUrl("/info/logos/google.svg") },
+  { name: "DeepMind", image: getBlobUrl("/info/logos/deepmind.svg") },
+  { name: "Meta", image: getBlobUrl("/info/logos/meta.svg") },
+  { name: "Hugging Face", image: getBlobUrl("/info/logos/huggingface.svg") },
+  { name: "NVIDIA", image: getBlobUrl("/info/logos/nvidia.svg") },
+  { name: "AMD", image: getBlobUrl("/info/logos/amd.svg") },
+  { name: "TSMC", image: getBlobUrl("/info/logos/tsmc.svg") },
+  { name: "ASML", image: getBlobUrl("/info/logos/asml.svg") },
+  { name: "Figure AI", image: getBlobUrl("/info/logos/figure.svg") },
+  { name: "Databricks", image: getBlobUrl("/info/logos/databricks.svg") },
+  { name: "Tesla", image: getBlobUrl("/info/logos/tesla.svg") },
+  { name: "SpaceX", image: getBlobUrl("/info/logos/spacex.svg") },
+  { name: "AWS", image: getBlobUrl("/info/logos/aws.svg") },
+  { name: "Maersk", image: getBlobUrl("/info/logos/maersk.svg") },
 ];
 
 export default function Logo3DCarousel({

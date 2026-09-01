@@ -6,6 +6,7 @@ interface ActivitySectionProps {
   linkedInPosts: LinkedInPostItem[];
 }
 
+
 export default function ActivitySection({
   linkedInPosts,
 }: ActivitySectionProps) {

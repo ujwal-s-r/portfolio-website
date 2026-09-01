@@ -36,11 +36,18 @@ export default function NowSection({
           return (
             <div
               key={item.id}
-              className="relative flex items-stretch w-full cursor-pointer group"
-              onMouseEnter={() => setActiveItemId(item.id)}
-              onMouseLeave={() =>
-                setActiveItemId((prev) => (prev === item.id ? null : prev))
-              }
+              className="
+                relative flex items-stretch w-full cursor-pointer group select-none touch-manipulation
+                transition-colors duration-150
+              "
+              onPointerEnter={(e) => {
+                if (e.pointerType !== "touch") setActiveItemId(item.id);
+              }}
+              onPointerLeave={(e) => {
+                if (e.pointerType !== "touch") {
+                  setActiveItemId((prev) => (prev === item.id ? null : prev));
+                }
+              }}
               onClick={() => handleToggle(item.id)}
             >
               {/* =================================================
@@ -197,11 +204,18 @@ export default function NowSection({
                 return (
                   <div
                     key={group.id}
-                    className="relative flex items-stretch w-full cursor-pointer group"
-                    onMouseEnter={() => setActiveItemId(group.id)}
-                    onMouseLeave={() =>
-                      setActiveItemId((prev) => (prev === group.id ? null : prev))
-                    }
+                    className="
+                      relative flex items-stretch w-full cursor-pointer group select-none touch-manipulation
+                      transition-colors duration-150
+                    "
+                    onPointerEnter={(e) => {
+                      if (e.pointerType !== "touch") setActiveItemId(group.id);
+                    }}
+                    onPointerLeave={(e) => {
+                      if (e.pointerType !== "touch") {
+                        setActiveItemId((prev) => (prev === group.id ? null : prev));
+                      }
+                    }}
                     onClick={() => handleToggle(group.id)}
                   >
                     {/* Stick and Dot */}

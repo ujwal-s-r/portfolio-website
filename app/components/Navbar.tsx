@@ -68,44 +68,52 @@ const ResumeIcon = () => (
   </svg>
 );
 
-const navItems: NavItem[] = [
-  {
-    id: "linkedin",
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/ujwal-s-r/",
-    external: true,
-    icon: <LinkedInIcon />,
-    showLabel: false,
-  },
-  {
-    id: "email",
-    label: "Email",
-    href: "mailto:ujwaljeevan123@gmail.com",
-    external: false,
-    icon: <EmailIcon />,
-    showLabel: false,
-  },
-  {
-    id: "github",
-    label: "GitHub",
-    href: "https://github.com/ujwal-s-r",
-    external: true,
-    icon: <GitHubIcon />,
-    showLabel: false,
-  },
-  {
-    id: "resume",
-    label: "Resume",
-    href: "/resume.pdf",
-    external: true,
-    icon: <ResumeIcon />,
-    showLabel: true,
-  },
-];
+import { getBlobUrl } from "@/app/lib/blob";
 
-export default function Navbar() {
+const DEFAULT_RESUME_URL = getBlobUrl("/resume.pdf");
+
+export default function Navbar({
+  resumeUrl = DEFAULT_RESUME_URL,
+}: {
+  resumeUrl?: string;
+}) {
   const [isBarHovered, setIsBarHovered] = useState(false);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+  const navItems: NavItem[] = [
+    {
+      id: "linkedin",
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/ujwal-s-r/",
+      external: true,
+      icon: <LinkedInIcon />,
+      showLabel: false,
+    },
+    {
+      id: "email",
+      label: "Email",
+      href: "mailto:ujwaljeevan123@gmail.com",
+      external: false,
+      icon: <EmailIcon />,
+      showLabel: false,
+    },
+    {
+      id: "github",
+      label: "GitHub",
+      href: "https://github.com/ujwal-s-r",
+      external: true,
+      icon: <GitHubIcon />,
+      showLabel: false,
+    },
+    {
+      id: "resume",
+      label: "Resume",
+      href: resumeUrl,
+      external: true,
+      icon: <ResumeIcon />,
+      showLabel: true,
+    },
+  ];
 
   return (
     <header className="fixed top-3 left-0 right-0 flex justify-center z-50 pointer-events-none px-4">

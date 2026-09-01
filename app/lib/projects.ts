@@ -9,6 +9,8 @@ export interface ProjectItem {
   techStack: string[];
   order: number;
   featured: boolean;
+  ongoing: boolean;
+  status: string;
   github: string;
   linkedin: string;
   link: string;
@@ -113,6 +115,13 @@ function loadProjectsFrom(folder: string): ProjectItem[] {
     const firstTextPoint = points.find((p) => !p.startsWith("![") && !p.startsWith("<")) || "";
     const description = data.description || firstTextPoint;
 
+    const statusVal = (data.status || "").toLowerCase();
+    const isOngoing =
+      statusVal === "ongoing" ||
+      statusVal === "active" ||
+      data.ongoing === "true" ||
+      data.ongoing === "yes";
+
     return {
       id: baseName,
       title: data.title || "Project",
@@ -121,6 +130,8 @@ function loadProjectsFrom(folder: string): ProjectItem[] {
       techStack,
       order: data.order ? parseInt(data.order, 10) : 99,
       featured: data.featured === "true",
+      ongoing: isOngoing,
+      status: data.status || (isOngoing ? "ongoing" : "completed"),
       github: data.github || "",
       linkedin: data.linkedin || "",
       link: data.link || "",

@@ -4,23 +4,30 @@ import HeroSection from "./components/HeroSection";
 import NowSection from "./components/NowSection";
 import ActivitySection from "./components/ActivitySection";
 import FooterSection from "./components/FooterSection";
-import { getExperiences } from "./lib/experience";
-import { getProjects, getResearch } from "./lib/projects";
-import { getNowBuilding, getNowLearning, getNowSkills } from "./lib/now";
-import { getLinkedInPosts } from "./lib/linkedin";
+import {
+  getExperiences,
+  getProjects,
+  getResearch,
+  getNowBuilding,
+  getNowLearning,
+  getNowSkills,
+  getLinkedInPosts,
+  getResumeUrl,
+} from "@/backend";
 
-export default function Home() {
-  const experiences = getExperiences();
-  const projects = getProjects();
-  const research = getResearch();
-  const buildingItems = getNowBuilding();
-  const learningItems = getNowLearning();
-  const skillGroups = getNowSkills();
-  const linkedInPosts = getLinkedInPosts();
+export default async function Home() {
+  const experiences = await getExperiences();
+  const projects = await getProjects();
+  const research = await getResearch();
+  const buildingItems = await getNowBuilding();
+  const learningItems = await getNowLearning();
+  const skillGroups = await getNowSkills();
+  const linkedInPosts = await getLinkedInPosts();
+  const resumeUrl = await getResumeUrl();
 
   return (
     <main className="min-h-screen bg-black text-white relative overflow-x-hidden">
-      <Navbar />
+      <Navbar resumeUrl={resumeUrl} />
       <PageNavigator />
 
       <div className="flex flex-col">
