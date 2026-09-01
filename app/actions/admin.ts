@@ -10,6 +10,7 @@ import {
   nowItems,
   skillGroups,
   linkedInPosts,
+  siteSettings,
 } from "@/backend/db";
 
 const COOKIE_NAME = "admin_session";
@@ -424,3 +425,27 @@ export async function reorderLinkedInPosts(items: { id: string; orderIndex: numb
   revalidatePath("/admin");
   return { success: true };
 }
+
+export async function updateResumeUrl(url: string) {
+  if (!(await verifyAuth())) throw new Error("Unauthorized");
+
+  await db
+    .insert(siteSettings)
+    .values({
+      key: "resume_url",
+      value: url,
+      updatedAt: Date.now(),
+    })
+    .onConflictDoUpdate({
+      target: siteSettings.key,
+      set: {
+        value: url,
+        updatedAt: Date.now(),
+      },
+    });
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  return { success: true };
+}
+

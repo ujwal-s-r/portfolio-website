@@ -6,6 +6,7 @@ import {
   nowItems,
   skillGroups,
   linkedInPosts,
+  siteSettings,
 } from "./db";
 import type { ExperienceItem } from "@/app/lib/experience";
 import type { ProjectItem } from "@/app/lib/projects";
@@ -269,6 +270,45 @@ export async function getLinkedInPosts(): Promise<LinkedInPostItem[]> {
     console.error("Error loading linkedin posts from DB:", err);
     return [];
   }
+}
+
+import { getBlobUrl } from "@/app/lib/blob";
+
+// 6. SITE SETTINGS (RESUME)
+export async function getResumeUrl(): Promise<string> {
+  await ensureInit();
+  try {
+    const rows = await db
+      .select()
+      .from(siteSettings)
+      .where(eq(siteSettings.key, "resume_url"))
+      .limit(1);
+
+    if (rows.length > 0 && rows[0].value) {
+      return getBlobUrl(rows[0].value);
+    }
+  } catch (err) {
+    console.error("Error loading resume URL from DB:", err);
+  }
+  return getBlobUrl("/resume.pdf");
+}
+
+export async function setResumeUrl(url: string): Promise<void> {
+  await ensureInit();
+  await db
+    .insert(siteSettings)
+    .values({
+      key: "resume_url",
+      value: url,
+      updatedAt: Date.now(),
+    })
+    .onConflictDoUpdate({
+      target: siteSettings.key,
+      set: {
+        value: url,
+        updatedAt: Date.now(),
+      },
+    });
 }
 
 export * from "./db";

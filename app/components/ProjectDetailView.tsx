@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import type { ProjectItem } from "@/app/lib/projects";
+import { getBlobUrl } from "@/app/lib/blob";
 
 interface ProjectDetailViewProps {
   project: ProjectItem;
@@ -44,6 +45,8 @@ function renderImageItem(line: string, index: number) {
     src = parts[0];
     size = parts[1].toLowerCase();
   }
+
+  src = getBlobUrl(src);
 
   let sizeClass = "w-full";
   if (size === "small" || size === "sm") {
@@ -118,7 +121,7 @@ export default function ProjectDetailView({
       {project.image ? (
         <div className="mb-8 w-full overflow-hidden rounded-xl border border-white/10 bg-[#080808]">
           <img
-            src={project.image}
+            src={getBlobUrl(project.image)}
             alt={project.title}
             className="h-[180px] sm:h-[220px] w-full object-cover"
           />

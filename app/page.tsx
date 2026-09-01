@@ -12,6 +12,7 @@ import {
   getNowLearning,
   getNowSkills,
   getLinkedInPosts,
+  getResumeUrl,
 } from "@/backend";
 
 export default async function Home() {
@@ -22,10 +23,11 @@ export default async function Home() {
   const learningItems = await getNowLearning();
   const skillGroups = await getNowSkills();
   const linkedInPosts = await getLinkedInPosts();
+  const resumeUrl = await getResumeUrl();
 
   return (
     <main className="min-h-screen bg-black text-white relative overflow-x-hidden">
-      <Navbar />
+      <Navbar resumeUrl={resumeUrl} />
       <PageNavigator />
 
       <div className="flex flex-col">

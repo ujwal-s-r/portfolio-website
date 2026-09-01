@@ -8,6 +8,7 @@ import {
   getNowLearning,
   getNowSkills,
   getLinkedInPosts,
+  getResumeUrl,
 } from "@/backend";
 import AdminDashboardClient from "./AdminDashboardClient";
 
@@ -28,6 +29,7 @@ export default async function AdminPage() {
   const nowLearning = await getNowLearning();
   const skillGroups = await getNowSkills();
   const linkedInPosts = await getLinkedInPosts();
+  const resumeUrl = await getResumeUrl();
 
   return (
     <AdminDashboardClient
@@ -39,6 +41,7 @@ export default async function AdminPage() {
       nowLearning={nowLearning}
       skillGroups={skillGroups}
       linkedInPosts={linkedInPosts}
+      initialResumeUrl={resumeUrl}
     />
   );
 }

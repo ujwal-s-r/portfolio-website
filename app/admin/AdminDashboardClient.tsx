@@ -20,6 +20,7 @@ import {
   saveLinkedInPost,
   deleteLinkedInPost,
   reorderLinkedInPosts,
+  updateResumeUrl,
 } from "@/app/actions/admin";
 import type { ProjectItem } from "@/app/lib/projects";
 import type { ExperienceItem } from "@/app/lib/experience";
@@ -35,9 +36,10 @@ interface AdminDashboardClientProps {
   nowLearning: NowItem[];
   skillGroups: SkillGroup[];
   linkedInPosts: LinkedInPostItem[];
+  initialResumeUrl?: string;
 }
 
-type TabType = "projects" | "research" | "experience" | "now" | "skills" | "linkedin";
+type TabType = "projects" | "research" | "experience" | "now" | "skills" | "linkedin" | "resume";
 
 export default function AdminDashboardClient({
   initialAuthenticated,
@@ -48,6 +50,7 @@ export default function AdminDashboardClient({
   nowLearning: initialNowLearning,
   skillGroups: initialSkillGroups,
   linkedInPosts: initialLinkedInPosts,
+  initialResumeUrl,
 }: AdminDashboardClientProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(initialAuthenticated);
   const [passcode, setPasscode] = useState("");
@@ -65,10 +68,54 @@ export default function AdminDashboardClient({
   const [learningList, setLearningList] = useState(initialNowLearning);
   const [skillsList, setSkillsList] = useState(initialSkillGroups);
   const [postsList, setPostsList] = useState(initialLinkedInPosts);
+  const [resumeUrl, setResumeUrlState] = useState(
+    initialResumeUrl || "https://ps2zjncditdyfyag.public.blob.vercel-storage.com/resume.pdf"
+  );
+  const [isUploadingResume, setIsUploadingResume] = useState(false);
 
   // Editor Modal State
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
+
+  const handleSaveResumeUrl = async (newUrl: string) => {
+    try {
+      setIsSubmitting(true);
+      await updateResumeUrl(newUrl);
+      setResumeUrlState(newUrl);
+      showToast("✅ Resume URL updated successfully!");
+    } catch (err: any) {
+      showToast("❌ Failed to update resume URL");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleResumeFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsUploadingResume(true);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        await handleSaveResumeUrl(data.url);
+      } else {
+        showToast("❌ Upload failed");
+      }
+    } catch (err) {
+      showToast("❌ Upload failed");
+    } finally {
+      setIsUploadingResume(false);
+    }
+  };
 
   const showToast = (msg: string) => {
     setNotification(msg);
@@ -539,6 +586,7 @@ export default function AdminDashboardClient({
             { key: "now", label: "Now (Building/Learning)", count: buildingList.length + learningList.length },
             { key: "skills", label: "Skills", count: skillsList.length },
             { key: "linkedin", label: "LinkedIn Posts", count: postsList.length },
+            { key: "resume", label: "📄 Resume & CV", count: undefined },
           ].map((tab) => (
             <button
               key={tab.key}
@@ -553,30 +601,34 @@ export default function AdminDashboardClient({
               }`}
             >
               <span>{tab.label}</span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${activeTab === tab.key ? "bg-black/15 text-black" : "bg-white/10 text-white/40"}`}>
-                {tab.count}
-              </span>
+              {tab.count !== undefined && (
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${activeTab === tab.key ? "bg-black/15 text-black" : "bg-white/10 text-white/40"}`}>
+                  {tab.count}
+                </span>
+              )}
             </button>
           ))}
         </div>
 
-        {/* Action Header: Search & Add Button */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-          <input
-            type="text"
-            placeholder={`Search ${activeTab}...`}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="bg-white/[0.03] border border-white/15 focus:border-emerald-500/50 focus:outline-none rounded-xl px-4 py-2.5 font-mono text-xs text-white placeholder-white/30 sm:w-80"
-          />
+        {/* Action Header: Search & Add Button (Hidden for Resume) */}
+        {activeTab !== "resume" && (
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            <input
+              type="text"
+              placeholder={`Search ${activeTab}...`}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="bg-white/[0.03] border border-white/15 focus:border-emerald-500/50 focus:outline-none rounded-xl px-4 py-2.5 font-mono text-xs text-white placeholder-white/30 sm:w-80"
+            />
 
-          <button
-            onClick={openNewItem}
-            className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-black font-mono text-xs uppercase tracking-wider font-semibold rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.25)]"
-          >
-            + Add New {activeTab === "now" ? "Now Item" : activeTab === "skills" ? "Skill Group" : activeTab.slice(0, -1)}
-          </button>
-        </div>
+            <button
+              onClick={openNewItem}
+              className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-black font-mono text-xs uppercase tracking-wider font-semibold rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.25)]"
+            >
+              + Add New {activeTab === "now" ? "Now Item" : activeTab === "skills" ? "Skill Group" : activeTab.slice(0, -1)}
+            </button>
+          </div>
+        )}
 
         {/* Content Lists */}
         <div className="space-y-3">
@@ -971,11 +1023,75 @@ export default function AdminDashboardClient({
                       onClick={() => handleDeleteItem(item.id)}
                       className="px-3 py-1.5 rounded-lg border border-red-500/20 bg-red-500/10 hover:bg-red-500/20 font-mono text-xs text-red-400"
                     >
-                      Delete
-                    </button>
-                  </div>
+          {/* 6. RESUME MANAGEMENT */}
+          {activeTab === "resume" && (
+            <div className="p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#090909] space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
+                <div>
+                  <h2 className="font-serif text-2xl text-white">Resume & CV Management</h2>
+                  <p className="font-mono text-xs text-white/50 mt-1">
+                    Upload your latest resume PDF. It will be stored in Vercel Blob and instantly served across the website.
+                  </p>
                 </div>
-              ))
+
+                <a
+                  href={resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 font-mono text-xs font-medium transition-all shrink-0"
+                >
+                  <span>Preview Live PDF ↗</span>
+                </a>
+              </div>
+
+              {/* Upload Card */}
+              <div className="border-2 border-dashed border-white/15 rounded-2xl p-8 text-center bg-white/[0.02] hover:border-emerald-500/40 transition-all">
+                <div className="max-w-md mx-auto space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center mx-auto text-xl">
+                    📄
+                  </div>
+                  <div>
+                    <h3 className="font-serif text-lg text-white">Upload New Resume (PDF)</h3>
+                    <p className="font-mono text-xs text-white/40 mt-1">
+                      Directly uploads to Vercel Blob cloud storage and updates Navbar links.
+                    </p>
+                  </div>
+
+                  <label className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-white text-black font-mono text-xs font-semibold uppercase tracking-wider rounded-xl cursor-pointer hover:bg-white/90 transition-all">
+                    <span>{isUploadingResume ? "Uploading to Blob..." : "Choose PDF File"}</span>
+                    <input
+                      type="file"
+                      accept=".pdf,application/pdf"
+                      disabled={isUploadingResume}
+                      onChange={handleResumeFileUpload}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {/* Manual URL Config */}
+              <div className="space-y-2 pt-2">
+                <label className="block font-mono text-[11px] uppercase tracking-wider text-white/50">
+                  Current Vercel Blob / Custom Resume URL
+                </label>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <input
+                    type="text"
+                    value={resumeUrl}
+                    onChange={(e) => setResumeUrlState(e.target.value)}
+                    className="flex-1 bg-white/[0.04] border border-white/15 focus:border-emerald-500/50 focus:outline-none rounded-xl px-4 py-2.5 font-mono text-xs text-white"
+                  />
+                  <button
+                    onClick={() => handleSaveResumeUrl(resumeUrl)}
+                    disabled={isSubmitting}
+                    className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-black font-mono text-xs uppercase tracking-wider font-semibold rounded-xl transition-all shrink-0"
+                  >
+                    {isSubmitting ? "Saving..." : "Save URL"}
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </div>

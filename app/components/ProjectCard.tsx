@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { ProjectItem } from "../lib/projects";
+import { getBlobUrl } from "../lib/blob";
 
 interface ProjectCardProps {
   project: ProjectItem;
@@ -65,12 +66,14 @@ export default function ProjectCard({
           overflow-hidden
           rounded-xl
           border
-          border-white/[0.12]
-          bg-black
-          transition-[border-color]
-          duration-200
-          ease-out
-          group-hover:border-white/30
+          border-white/[0.08]
+          bg-[#070707]
+          transition-all
+          duration-400
+          ease-[cubic-bezier(0.22,1,0.36,1)]
+          group-hover:border-emerald-500/40
+          group-hover:bg-[#0c0c0c]
+          group-hover:shadow-[0_0_24px_rgba(16,185,129,0.12)]
         "
       >
         {/* =======================================================
@@ -88,7 +91,7 @@ export default function ProjectCard({
         >
           {hasImage ? (
             <img
-              src={project.image!}
+              src={getBlobUrl(project.image!)}
               alt={project.title}
               loading={index < 4 ? "eager" : "lazy"}
               className="

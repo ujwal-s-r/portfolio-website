@@ -65,6 +65,12 @@ export const linkedInPosts = sqliteTable("linkedin_posts", {
   createdAt: text("created_at").notNull().default(""),
 });
 
+export const siteSettings = sqliteTable("site_settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: integer("updated_at").notNull().default(0),
+});
+
 export type Project = typeof projects.$inferSelect;
 export type InsertProject = typeof projects.$inferInsert;
 
@@ -79,3 +85,7 @@ export type InsertSkillGroup = typeof skillGroups.$inferInsert;
 
 export type LinkedInPostRecord = typeof linkedInPosts.$inferSelect;
 export type InsertLinkedInPost = typeof linkedInPosts.$inferInsert;
+
+export type SiteSetting = typeof siteSettings.$inferSelect;
+export type InsertSiteSetting = typeof siteSettings.$inferInsert;
+
