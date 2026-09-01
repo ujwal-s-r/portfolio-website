@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:seed": "tsx backend/db/seed.ts",
-    "blob:migrate": "tsx backend/offload_to_blob.ts"
+    "db:seed": "tsx backend/db/seed.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.17.4",
