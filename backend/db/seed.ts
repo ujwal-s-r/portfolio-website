@@ -85,6 +85,14 @@ export async function runMigrations(drop = false) {
       created_at TEXT NOT NULL DEFAULT ''
     );
   `);
+
+  await client.execute(`
+    CREATE TABLE IF NOT EXISTS site_settings (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL,
+      updated_at INTEGER NOT NULL DEFAULT 0
+    );
+  `);
 }
 
 function parseMarkdownFile(fullPath: string) {
