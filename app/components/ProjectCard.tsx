@@ -326,20 +326,18 @@ export default function ProjectCard({
           >
             <h3
               className="
-                h-[36px]
-                sm:h-[38px]
+                min-h-[44px]
+                sm:min-h-[48px]
                 min-w-0
                 flex-1
                 font-serif
-                text-[11.5px]
+                text-[12px]
                 font-medium
-                leading-[1.26]
+                leading-[1.28]
                 tracking-tight
                 text-white/95
                 sm:text-[13px]
-                sm:leading-[1.28]
-                line-clamp-2
-                overflow-hidden
+                sm:leading-[1.3]
               "
             >
               {project.title}
@@ -348,6 +346,7 @@ export default function ProjectCard({
             <span
               className="
                 shrink-0
+                pt-0.5
                 font-mono
                 text-[8.5px]
                 tracking-[0.16em]
