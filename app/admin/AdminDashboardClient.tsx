@@ -1287,9 +1287,12 @@ export default function AdminDashboardClient({
                       rows={8}
                       value={editingItem.pointsStr || ""}
                       onChange={(e) => setEditingItem({ ...editingItem, pointsStr: e.target.value })}
-                      placeholder="- **Built** a distributed pipeline...&#10;&#10;![System Architecture|large](/info/projects/diagram.png)"
-                      className="w-full bg-white/[0.04] border border-white/15 rounded-xl p-3 font-mono text-xs text-white leading-relaxed"
+                      placeholder={`Developed an autonomous multi-agent reinforcement learning environment with customizable agent roles and observation spaces.\n\n**Key Achievements:**\n- Scaled distributed simulations across 32 GPU workers.\n- Achieved 94.2% task success rate under latency constraints.\n\n![System Architecture Flow | large](/info/projects/01-diagram.png)`}
+                      className="w-full bg-white/[0.04] border border-white/15 rounded-xl p-3 font-mono text-xs text-white leading-relaxed placeholder-white/20"
                     />
+                    <p className="mt-1.5 font-mono text-[10px] text-white/40 leading-normal">
+                      💡 <strong>Markdown format:</strong> Separate points with double-enter (blank line) · Use <code className="text-emerald-400">**bold**</code> for emphasis · Embed images with <code className="text-emerald-400">![Caption | small/medium/large/full](image_url)</code>
+                    </p>
                   </div>
                 </>
               )}
@@ -1307,6 +1310,7 @@ export default function AdminDashboardClient({
                         required
                         value={editingItem.company || ""}
                         onChange={(e) => setEditingItem({ ...editingItem, company: e.target.value })}
+                        placeholder="e.g. A.P. Moller - Maersk"
                         className="w-full bg-white/[0.04] border border-white/15 rounded-xl px-3 py-2 font-mono text-xs text-white"
                       />
                     </div>
@@ -1319,6 +1323,7 @@ export default function AdminDashboardClient({
                         required
                         value={editingItem.role || ""}
                         onChange={(e) => setEditingItem({ ...editingItem, role: e.target.value })}
+                        placeholder="e.g. AI / ML Engineer"
                         className="w-full bg-white/[0.04] border border-white/15 rounded-xl px-3 py-2 font-mono text-xs text-white"
                       />
                     </div>
@@ -1333,7 +1338,7 @@ export default function AdminDashboardClient({
                         type="text"
                         value={editingItem.period || ""}
                         onChange={(e) => setEditingItem({ ...editingItem, period: e.target.value })}
-                        placeholder="Jan 2024 – Present"
+                        placeholder="e.g. 2024 – Present"
                         className="w-full bg-white/[0.04] border border-white/15 rounded-xl px-3 py-2 font-mono text-xs text-white"
                       />
                     </div>
@@ -1345,7 +1350,7 @@ export default function AdminDashboardClient({
                         type="text"
                         value={editingItem.location || ""}
                         onChange={(e) => setEditingItem({ ...editingItem, location: e.target.value })}
-                        placeholder="Bengaluru, India"
+                        placeholder="e.g. Bengaluru, India"
                         className="w-full bg-white/[0.04] border border-white/15 rounded-xl px-3 py-2 font-mono text-xs text-white"
                       />
                     </div>
@@ -1359,8 +1364,12 @@ export default function AdminDashboardClient({
                       rows={6}
                       value={editingItem.pointsStr || ""}
                       onChange={(e) => setEditingItem({ ...editingItem, pointsStr: e.target.value })}
-                      className="w-full bg-white/[0.04] border border-white/15 rounded-xl p-3 font-mono text-xs text-white"
+                      placeholder={`Architected and deployed distributed AI pipelines reducing compute overhead by 35%.\n\nSpearheaded end-to-end multi-agent orchestration for supply chain forecasting.`}
+                      className="w-full bg-white/[0.04] border border-white/15 rounded-xl p-3 font-mono text-xs text-white leading-relaxed placeholder-white/20"
                     />
+                    <p className="mt-1.5 font-mono text-[10px] text-white/40">
+                      💡 Separate distinct bullet points by pressing Enter twice (empty line between points).
+                    </p>
                   </div>
                 </>
               )}
@@ -1390,9 +1399,12 @@ export default function AdminDashboardClient({
                       rows={4}
                       value={editingItem.skillsStr || ""}
                       onChange={(e) => setEditingItem({ ...editingItem, skillsStr: e.target.value })}
-                      placeholder="PyTorch, Transformers, LangChain, CUDA"
-                      className="w-full bg-white/[0.04] border border-white/15 rounded-xl p-3 font-mono text-xs text-white"
+                      placeholder="PyTorch, Transformers, LangChain, CUDA, vLLM, DeepSeek-R1"
+                      className="w-full bg-white/[0.04] border border-white/15 rounded-xl p-3 font-mono text-xs text-white placeholder-white/20"
                     />
+                    <p className="mt-1.5 font-mono text-[10px] text-white/40">
+                      💡 Separate each skill technology with a comma.
+                    </p>
                   </div>
                 </>
               )}
@@ -1423,6 +1435,7 @@ export default function AdminDashboardClient({
                         type="text"
                         value={editingItem.github || ""}
                         onChange={(e) => setEditingItem({ ...editingItem, github: e.target.value })}
+                        placeholder="https://github.com/username/repo"
                         className="w-full bg-white/[0.04] border border-white/15 rounded-xl px-3 py-2 font-mono text-xs text-white"
                       />
                     </div>
@@ -1436,7 +1449,8 @@ export default function AdminDashboardClient({
                       type="text"
                       value={editingItem.techStackStr || ""}
                       onChange={(e) => setEditingItem({ ...editingItem, techStackStr: e.target.value })}
-                      className="w-full bg-white/[0.04] border border-white/15 rounded-xl px-3 py-2 font-mono text-xs text-white"
+                      placeholder="PyTorch, Unsloth, Hugging Face, GRPO"
+                      className="w-full bg-white/[0.04] border border-white/15 rounded-xl px-3 py-2 font-mono text-xs text-white placeholder-white/20"
                     />
                   </div>
 
@@ -1448,7 +1462,8 @@ export default function AdminDashboardClient({
                       rows={4}
                       value={editingItem.description || ""}
                       onChange={(e) => setEditingItem({ ...editingItem, description: e.target.value })}
-                      className="w-full bg-white/[0.04] border border-white/15 rounded-xl p-3 font-mono text-xs text-white"
+                      placeholder="e.g. Implementing and benchmarking Group Relative Policy Optimization (GRPO) reinforcement learning on open-weight LLMs."
+                      className="w-full bg-white/[0.04] border border-white/15 rounded-xl p-3 font-mono text-xs text-white leading-relaxed placeholder-white/20"
                     />
                   </div>
                 </>
@@ -1465,6 +1480,7 @@ export default function AdminDashboardClient({
                       type="text"
                       value={editingItem.link || ""}
                       onChange={(e) => setEditingItem({ ...editingItem, link: e.target.value })}
+                      placeholder="https://www.linkedin.com/posts/..."
                       className="w-full bg-white/[0.04] border border-white/15 rounded-xl px-3 py-2 font-mono text-xs text-white"
                     />
                   </div>
@@ -1474,10 +1490,11 @@ export default function AdminDashboardClient({
                       Post Body Text
                     </label>
                     <textarea
-                      rows={5}
+                      rows={4}
                       value={editingItem.text || ""}
                       onChange={(e) => setEditingItem({ ...editingItem, text: e.target.value })}
-                      className="w-full bg-white/[0.04] border border-white/15 rounded-xl p-3 font-mono text-xs text-white"
+                      placeholder="e.g. Deep dive into Multi-Head Attention mechanisms and memory-efficient kernel dispatching in PyTorch."
+                      className="w-full bg-white/[0.04] border border-white/15 rounded-xl p-3 font-mono text-xs text-white leading-relaxed placeholder-white/20"
                     />
                   </div>
                 </>
