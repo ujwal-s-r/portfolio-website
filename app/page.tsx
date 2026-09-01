@@ -13,6 +13,7 @@ import {
   getNowSkills,
   getLinkedInPosts,
   getResumeUrl,
+  getUniqueVisitorCount,
 } from "@/backend";
 
 export default async function Home() {
@@ -24,6 +25,7 @@ export default async function Home() {
   const skillGroups = await getNowSkills();
   const linkedInPosts = await getLinkedInPosts();
   const resumeUrl = await getResumeUrl();
+  const visitorCount = await getUniqueVisitorCount();
 
   return (
     <main className="min-h-screen bg-black text-white relative overflow-x-hidden">
@@ -122,7 +124,7 @@ export default async function Home() {
             pb-6
           "
         >
-          <FooterSection />
+          <FooterSection visitorCount={visitorCount} />
         </section>
       </div>
     </main>

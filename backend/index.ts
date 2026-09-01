@@ -273,6 +273,8 @@ export async function getLinkedInPosts(): Promise<LinkedInPostItem[]> {
 }
 
 import { getBlobUrl } from "@/app/lib/blob";
+import { count, sql } from "drizzle-orm";
+import { visitors } from "./db";
 
 // 6. SITE SETTINGS (RESUME)
 export async function getResumeUrl(): Promise<string> {
@@ -309,6 +311,43 @@ export async function setResumeUrl(url: string): Promise<void> {
         updatedAt: Date.now(),
       },
     });
+}
+
+// 7. VISITORS TRACKING
+export async function recordVisitor(deviceHash: string): Promise<number> {
+  await ensureInit();
+  const now = new Date().toISOString();
+  try {
+    await db
+      .insert(visitors)
+      .values({
+        deviceHash,
+        firstVisitedAt: now,
+        lastVisitedAt: now,
+        totalVisits: 1,
+      })
+      .onConflictDoUpdate({
+        target: visitors.deviceHash,
+        set: {
+          lastVisitedAt: now,
+          totalVisits: sql`${visitors.totalVisits} + 1`,
+        },
+      });
+  } catch (err) {
+    console.error("Error recording visitor:", err);
+  }
+  return getUniqueVisitorCount();
+}
+
+export async function getUniqueVisitorCount(): Promise<number> {
+  await ensureInit();
+  try {
+    const res = await db.select({ total: count() }).from(visitors);
+    return res[0]?.total ?? 0;
+  } catch (err) {
+    console.error("Error getting visitor count:", err);
+    return 0;
+  }
 }
 
 export * from "./db";
