@@ -23,8 +23,23 @@ export default function LiveVisitorBadge({ initialCount = 0 }: { initialCount?: 
   useEffect(() => {
     setMounted(true);
 
-    // Record visit and get live distinct count
-    fetch("/api/visitors", { method: "POST" })
+    let clientId = "";
+    try {
+      clientId = localStorage.getItem("ujwal_visitor_uuid") || "";
+      if (!clientId) {
+        clientId = "usr_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
+        localStorage.setItem("ujwal_visitor_uuid", clientId);
+      }
+    } catch {
+      // localStorage disabled / private mode
+    }
+
+    // Record visit with persistent device ID and get live distinct count
+    fetch("/api/visitors", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ clientId }),
+    })
       .then((res) => res.json())
       .then((data) => {
         if (data && typeof data.count === "number") {
