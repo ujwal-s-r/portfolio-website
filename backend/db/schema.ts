@@ -71,6 +71,13 @@ export const siteSettings = sqliteTable("site_settings", {
   updatedAt: integer("updated_at").notNull().default(0),
 });
 
+export const visitors = sqliteTable("visitors", {
+  deviceHash: text("device_hash").primaryKey(),
+  firstVisitedAt: text("first_visited_at").notNull(),
+  lastVisitedAt: text("last_visited_at").notNull(),
+  totalVisits: integer("total_visits").notNull().default(1),
+});
+
 export type Project = typeof projects.$inferSelect;
 export type InsertProject = typeof projects.$inferInsert;
 
@@ -88,4 +95,7 @@ export type InsertLinkedInPost = typeof linkedInPosts.$inferInsert;
 
 export type SiteSetting = typeof siteSettings.$inferSelect;
 export type InsertSiteSetting = typeof siteSettings.$inferInsert;
+
+export type Visitor = typeof visitors.$inferSelect;
+export type InsertVisitor = typeof visitors.$inferInsert;
 

@@ -93,6 +93,15 @@ export async function runMigrations(drop = false) {
       updated_at INTEGER NOT NULL DEFAULT 0
     );
   `);
+
+  await client.execute(`
+    CREATE TABLE IF NOT EXISTS visitors (
+      device_hash TEXT PRIMARY KEY,
+      first_visited_at TEXT NOT NULL,
+      last_visited_at TEXT NOT NULL,
+      total_visits INTEGER NOT NULL DEFAULT 1
+    );
+  `);
 }
 
 function parseMarkdownFile(fullPath: string) {

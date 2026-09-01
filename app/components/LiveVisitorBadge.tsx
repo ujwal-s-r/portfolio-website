@@ -1,0 +1,62 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { motion, useSpring, useTransform } from "framer-motion";
+
+function AnimatedNumber({ value }: { value: number }) {
+  const spring = useSpring(0, { mass: 0.8, stiffness: 75, damping: 15 });
+  const display = useTransform(spring, (current) =>
+    Math.floor(current).toLocaleString("en-US")
+  );
+
+  useEffect(() => {
+    spring.set(value);
+  }, [spring, value]);
+
+  return <motion.span>{display}</motion.span>;
+}
+
+export default function LiveVisitorBadge({ initialCount = 0 }: { initialCount?: number }) {
+  const [count, setCount] = useState<number>(initialCount);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+
+    // Record visit and get live distinct count
+    fetch("/api/visitors", { method: "POST" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && typeof data.count === "number") {
+          setCount(data.count);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching visitor count:", err);
+      });
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 backdrop-blur-md"
+    >
+      {/* Matching Green Dot */}
+      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse shrink-0" />
+
+      {/* Matching Text & Emerald Count */}
+      <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/70 flex items-center gap-1.5">
+        <span className="font-semibold text-emerald-400 tracking-normal">
+          {mounted && count > 0 ? (
+            <AnimatedNumber value={count} />
+          ) : (
+            <span>{count > 0 ? count.toLocaleString() : "..."}</span>
+          )}
+        </span>
+        <span>Unique Souls Stumbled on this page</span>
+      </span>
+    </motion.div>
+  );
+}

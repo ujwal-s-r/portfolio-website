@@ -2,19 +2,28 @@
 
 import OrbitBrandDock from "./OrbitBrandDock";
 import Logo3DCarousel from "./Logo3DCarousel";
+import LiveVisitorBadge from "./LiveVisitorBadge";
 
-export default function FooterSection() {
+interface FooterSectionProps {
+  visitorCount?: number;
+}
+
+export default function FooterSection({ visitorCount = 0 }: FooterSectionProps) {
   return (
     <footer className="w-full flex flex-col items-center justify-center pt-2 pb-4 px-6">
       <div className="w-full max-w-3xl flex flex-col items-center text-center">
         {/* =======================================================
-            TOP PILL BADGE: SOCIALS (WITH GREEN DOT)
+            TOP CAPSULES: SOCIALS & LIVE VISITOR COUNTER
         ======================================================= */}
-        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 backdrop-blur-md">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
-          <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/70">
-            Socials
-          </span>
+        <div className="mb-5 flex flex-wrap items-center justify-center gap-3">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 backdrop-blur-md">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/70">
+              Socials
+            </span>
+          </div>
+
+          <LiveVisitorBadge initialCount={visitorCount} />
         </div>
 
         {/* =======================================================
