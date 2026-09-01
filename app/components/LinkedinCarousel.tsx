@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useMemo, useState } from "react";
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import type { LinkedInPostItem } from "../lib/linkedin";
+import { getBlobUrl } from "../lib/blob";
 
 interface LinkedinCarouselProps {
   posts: LinkedInPostItem[];
@@ -11,7 +12,7 @@ interface LinkedinCarouselProps {
 export default function LinkedinCarousel({ posts }: LinkedinCarouselProps) {
   const userItems = useMemo(() => {
     return posts.map((p, idx) => ({
-      image: p.image,
+      image: getBlobUrl(p.image),
       centerText: p.title,
       subText: p.text,
       number: String(idx + 1).padStart(2, "0"),

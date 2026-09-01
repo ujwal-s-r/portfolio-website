@@ -26,6 +26,7 @@ import type { ProjectItem } from "@/app/lib/projects";
 import type { ExperienceItem } from "@/app/lib/experience";
 import type { NowItem, SkillGroup } from "@/app/lib/now";
 import type { LinkedInPostItem } from "@/app/lib/linkedin";
+import { getBlobUrl } from "@/app/lib/blob";
 
 interface AdminDashboardClientProps {
   initialAuthenticated: boolean;
@@ -677,7 +678,7 @@ export default function AdminDashboardClient({
 
                     {/* Thumbnail */}
                     {item.image ? (
-                      <img src={item.image} alt="" className="w-12 h-12 object-cover rounded-lg border border-white/10 shrink-0" />
+                      <img src={getBlobUrl(item.image)} alt="" className="w-12 h-12 object-cover rounded-lg border border-white/10 shrink-0" />
                     ) : (
                       <div className="w-12 h-12 rounded-lg bg-white/[0.04] border border-white/10 flex items-center justify-center text-white/20 shrink-0 font-mono text-[10px]">
                         N/A
@@ -1023,6 +1024,13 @@ export default function AdminDashboardClient({
                       onClick={() => handleDeleteItem(item.id)}
                       className="px-3 py-1.5 rounded-lg border border-red-500/20 bg-red-500/10 hover:bg-red-500/20 font-mono text-xs text-red-400"
                     >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))
+          )}
+
           {/* 6. RESUME MANAGEMENT */}
           {activeTab === "resume" && (
             <div className="p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#090909] space-y-6">
