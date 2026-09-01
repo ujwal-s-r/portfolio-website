@@ -1,4 +1,4 @@
-import { asc, eq } from "drizzle-orm";
+import { asc, eq, or } from "drizzle-orm";
 import {
   db,
   projects,
@@ -54,10 +54,18 @@ export async function getExperiences(): Promise<ExperienceItem[]> {
 export async function getExperienceBySlug(slug: string): Promise<ExperienceItem | null> {
   await ensureInit();
   try {
+    const decoded = decodeURIComponent(slug);
     const rows = await db
       .select()
       .from(experiences)
-      .where(eq(experiences.slug, slug))
+      .where(
+        or(
+          eq(experiences.slug, slug),
+          eq(experiences.id, slug),
+          eq(experiences.slug, decoded),
+          eq(experiences.id, decoded)
+        )
+      )
       .limit(1);
 
     if (rows.length === 0) return null;
@@ -71,7 +79,8 @@ export async function getExperienceBySlug(slug: string): Promise<ExperienceItem 
       order: r.orderIndex,
       points: JSON.parse(r.points || "[]"),
     };
-  } catch {
+  } catch (err) {
+    console.error("Error in getExperienceBySlug:", err);
     return null;
   }
 }
@@ -144,10 +153,22 @@ export async function getResearch(): Promise<ProjectItem[]> {
 export async function getProjectBySlug(slug: string): Promise<ProjectItem | null> {
   await ensureInit();
   try {
+    const decoded = decodeURIComponent(slug);
     const rows = await db
       .select()
       .from(projects)
-      .where(eq(projects.slug, slug))
+      .where(
+        or(
+          eq(projects.slug, slug),
+          eq(projects.id, slug),
+          eq(projects.slug, decoded),
+          eq(projects.id, decoded),
+          eq(projects.id, `projects-${slug}`),
+          eq(projects.id, `research-${slug}`),
+          eq(projects.id, `projects-${decoded}`),
+          eq(projects.id, `research-${decoded}`)
+        )
+      )
       .limit(1);
 
     if (rows.length === 0) return null;
@@ -169,7 +190,8 @@ export async function getProjectBySlug(slug: string): Promise<ProjectItem | null
       points: JSON.parse(r.points || "[]"),
       image: r.image,
     };
-  } catch {
+  } catch (err) {
+    console.error("Error in getProjectBySlug:", err);
     return null;
   }
 }

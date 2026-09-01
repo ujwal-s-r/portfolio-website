@@ -1,8 +1,11 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import Navbar from "@/app/components/Navbar";
+import ProjectDetailHeader from "@/app/components/ProjectDetailHeader";
 import ProjectDetailView from "@/app/components/ProjectDetailView";
 import { getResearchBySlug, getResearch } from "@/backend";
+
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -44,9 +47,9 @@ export default async function ResearchPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-black text-white relative overflow-x-hidden">
-      <Navbar />
-      <div className="pt-20 flex justify-center w-full min-h-screen">
-        <ProjectDetailView project={research} backHref="/" />
+      <ProjectDetailHeader backHref="/" />
+      <div className="flex justify-center w-full min-h-screen">
+        <ProjectDetailView project={research} backHref="/" isOverlay={false} />
       </div>
     </main>
   );

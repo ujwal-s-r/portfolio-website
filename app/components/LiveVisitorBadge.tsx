@@ -56,14 +56,14 @@ export default function LiveVisitorBadge({ initialCount = 0 }: { initialCount?: 
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 backdrop-blur-md"
+      className="inline-flex items-center gap-2 px-3 py-1 bg-transparent"
     >
       {/* Matching Green Dot */}
-      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse shrink-0" />
+      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] animate-pulse shrink-0 relative top-[0.5px]" />
 
-      {/* Matching Text & Emerald Count */}
-      <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/70 flex items-center gap-1.5">
-        <span className="font-semibold text-emerald-400 tracking-normal">
+      {/* Vibrant Large Emerald Count & Legible Text */}
+      <span className="font-mono text-xs sm:text-[13px] uppercase tracking-[0.16em] text-white/80 flex items-center gap-2">
+        <span className="text-sm sm:text-[15px] font-bold text-emerald-400 tracking-normal [text-shadow:0_0_12px_rgba(52,211,153,0.75)]">
           {mounted && count > 0 ? (
             <AnimatedNumber value={count} />
           ) : (

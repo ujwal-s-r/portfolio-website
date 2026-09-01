@@ -4,6 +4,9 @@ import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import { getExperienceBySlug, getExperiences } from "@/backend";
 
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }

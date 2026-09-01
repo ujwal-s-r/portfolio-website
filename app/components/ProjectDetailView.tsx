@@ -165,14 +165,14 @@ export default function ProjectDetailView({
 
           {/* GITHUB + LINKEDIN + LIVE LINK BESIDE TITLE */}
           {(project.github || project.linkedin || project.link) && (
-            <div className="mt-2 flex shrink-0 items-center gap-2">
+            <div className="mt-2 flex shrink-0 items-center gap-2.5">
               {project.github && (
                 <a
                   href={project.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Open GitHub repository"
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.14] text-white/50 transition-colors duration-200 hover:border-white/30 hover:bg-white/[0.05] hover:text-white"
+                  className="group flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-white/[0.06] text-white/85 transition-all duration-200 hover:border-emerald-500/50 hover:bg-emerald-500/15 hover:text-emerald-400 hover:scale-105 shadow-sm"
                 >
                   <GithubIcon />
                 </a>
@@ -184,7 +184,7 @@ export default function ProjectDetailView({
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Open LinkedIn"
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.14] text-white/50 transition-colors duration-200 hover:border-white/30 hover:bg-white/[0.05] hover:text-white"
+                  className="group flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-white/[0.06] text-white/85 transition-all duration-200 hover:border-emerald-500/50 hover:bg-emerald-500/15 hover:text-emerald-400 hover:scale-105 shadow-sm"
                 >
                   <LinkedinIcon />
                 </a>
@@ -196,13 +196,13 @@ export default function ProjectDetailView({
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Open Live Demo"
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.14] text-white/50 transition-colors duration-200 hover:border-white/30 hover:bg-white/[0.05] hover:text-white"
+                  className="group flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-white/[0.06] text-white/85 transition-all duration-200 hover:border-emerald-500/50 hover:bg-emerald-500/15 hover:text-emerald-400 hover:scale-105 shadow-sm"
                 >
                   <svg
                     className="h-3.5 w-3.5"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth={1.8}
+                    strokeWidth={2}
                     viewBox="0 0 24 24"
                   >
                     <path
@@ -263,16 +263,18 @@ export default function ProjectDetailView({
           <button
             type="button"
             onClick={onBackClick}
-            className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/30 transition-colors duration-200 hover:text-white/70"
+            className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-white/60 transition-all duration-200 hover:text-white"
           >
-            ← Back to Overview
+            <span className="text-emerald-400 transition-transform group-hover:-translate-x-1">←</span>
+            <span>Back to Overview</span>
           </button>
         ) : (
           <Link
             href={backHref}
-            className="inline-block font-mono text-[10px] uppercase tracking-[0.16em] text-white/30 transition-colors duration-200 hover:text-white/70"
+            className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-white/60 transition-all duration-200 hover:text-white"
           >
-            ← Back to Overview
+            <span className="text-emerald-400 transition-transform group-hover:-translate-x-1">←</span>
+            <span>Back to Overview</span>
           </Link>
         )}
       </div>
