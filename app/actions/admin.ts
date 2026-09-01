@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import {
   db,
   projects,
@@ -71,12 +71,19 @@ export async function saveProject(data: {
 }) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
 
-  const id = data.id || `${data.category}-${data.slug}`;
+  // Always query by slug OR id to find the true existing record primary key
+  const existing = await db
+    .select({ id: projects.id })
+    .from(projects)
+    .where(or(eq(projects.slug, data.slug), eq(projects.id, data.id || data.slug)))
+    .limit(1);
+
+  const recordId = existing.length > 0 ? existing[0].id : (data.id || `${data.category}-${data.slug}`);
 
   await db
     .insert(projects)
     .values({
-      id,
+      id: recordId,
       slug: data.slug,
       title: data.title,
       tag: data.tag || "Project",
@@ -129,7 +136,7 @@ export async function saveProject(data: {
 export async function deleteProject(id: string) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
 
-  await db.delete(projects).where(eq(projects.id, id));
+  await db.delete(projects).where(or(eq(projects.id, id), eq(projects.slug, id)));
 
   revalidatePath("/");
   revalidatePath("/projects/[slug]", "page");
@@ -166,12 +173,18 @@ export async function saveExperience(data: {
 }) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
 
-  const id = data.id || data.slug;
+  const existing = await db
+    .select({ id: experiences.id })
+    .from(experiences)
+    .where(or(eq(experiences.slug, data.slug), eq(experiences.id, data.id || data.slug)))
+    .limit(1);
+
+  const recordId = existing.length > 0 ? existing[0].id : (data.id || data.slug);
 
   await db
     .insert(experiences)
     .values({
-      id,
+      id: recordId,
       slug: data.slug,
       company: data.company,
       role: data.role,
@@ -203,7 +216,7 @@ export async function saveExperience(data: {
 export async function deleteExperience(id: string) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
 
-  await db.delete(experiences).where(eq(experiences.id, id));
+  await db.delete(experiences).where(or(eq(experiences.id, id), eq(experiences.slug, id)));
 
   revalidatePath("/");
   revalidatePath("/experience/[slug]", "page");
@@ -240,12 +253,18 @@ export async function saveNowItem(data: {
 }) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
 
-  const id = data.id || `${data.category.toLowerCase()}-${data.slug}`;
+  const existing = await db
+    .select({ id: nowItems.id })
+    .from(nowItems)
+    .where(or(eq(nowItems.slug, data.slug), eq(nowItems.id, data.id || data.slug)))
+    .limit(1);
+
+  const recordId = existing.length > 0 ? existing[0].id : (data.id || `${data.category.toLowerCase()}-${data.slug}`);
 
   await db
     .insert(nowItems)
     .values({
-      id,
+      id: recordId,
       slug: data.slug,
       title: data.title,
       category: data.category,
@@ -278,7 +297,7 @@ export async function saveNowItem(data: {
 export async function deleteNowItem(id: string) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
 
-  await db.delete(nowItems).where(eq(nowItems.id, id));
+  await db.delete(nowItems).where(or(eq(nowItems.id, id), eq(nowItems.slug, id)));
 
   revalidatePath("/");
   revalidatePath("/admin");
@@ -309,7 +328,13 @@ export async function saveSkillGroup(data: {
 }) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
 
-  const id = data.id || data.category.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const existing = await db
+    .select({ id: skillGroups.id })
+    .from(skillGroups)
+    .where(or(eq(skillGroups.category, data.category), eq(skillGroups.id, data.id || data.category.toLowerCase().replace(/[^a-z0-9]+/g, "-"))))
+    .limit(1);
+
+  const id = existing.length > 0 ? existing[0].id : (data.id || data.category.toLowerCase().replace(/[^a-z0-9]+/g, "-"));
 
   await db
     .insert(skillGroups)
@@ -355,12 +380,18 @@ export async function saveLinkedInPost(data: {
 }) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
 
-  const id = data.id || data.slug;
+  const existing = await db
+    .select({ id: linkedInPosts.id })
+    .from(linkedInPosts)
+    .where(or(eq(linkedInPosts.slug, data.slug), eq(linkedInPosts.id, data.id || data.slug)))
+    .limit(1);
+
+  const recordId = existing.length > 0 ? existing[0].id : (data.id || data.slug);
 
   await db
     .insert(linkedInPosts)
     .values({
-      id,
+      id: recordId,
       slug: data.slug,
       title: data.title,
       image: data.image || "",
