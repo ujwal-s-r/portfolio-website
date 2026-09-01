@@ -1,20 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { motion, useSpring, useTransform } from "framer-motion";
-
-function AnimatedNumber({ value }: { value: number }) {
-  const spring = useSpring(0, { mass: 0.8, stiffness: 75, damping: 15 });
-  const display = useTransform(spring, (current) =>
-    Math.floor(current).toLocaleString("en-US")
-  );
-
-  useEffect(() => {
-    spring.set(value);
-  }, [spring, value]);
-
-  return <motion.span>{display}</motion.span>;
-}
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import NumberOdometer from "./NumberOdometer";
 
 export default function LiveVisitorBadge({ initialCount = 0 }: { initialCount?: number }) {
   const [count, setCount] = useState<number>(initialCount);
@@ -51,9 +39,16 @@ export default function LiveVisitorBadge({ initialCount = 0 }: { initialCount?: 
 
       {/* Vibrant Large Emerald Count & Legible Text */}
       <span className="font-mono text-xs sm:text-[13px] uppercase tracking-[0.16em] text-white/80 flex items-center gap-2">
-        <span className="text-sm sm:text-[15px] font-bold text-emerald-400 tracking-normal [text-shadow:0_0_12px_rgba(52,211,153,0.75)]">
+        <span className="text-sm sm:text-[15px] font-bold text-emerald-400 tracking-normal [text-shadow:0_0_12px_rgba(52,211,153,0.75)] inline-flex items-center">
           {mounted && count > 0 ? (
-            <AnimatedNumber value={count} />
+            <NumberOdometer
+              value={count}
+              duration={1.5}
+              digitStagger={0.06}
+              spinLoops={2}
+              numberColor="#34d399"
+              fontSize={15}
+            />
           ) : (
             <span>{count > 0 ? count.toLocaleString() : "..."}</span>
           )}
