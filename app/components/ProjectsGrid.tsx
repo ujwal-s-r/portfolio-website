@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { ProjectItem } from "../lib/projects";
 import ProjectCard from "./ProjectCard";
@@ -19,6 +19,33 @@ export default function ProjectsGrid({
 }: ProjectsGridProps) {
   const [selected, setSelected] = useState<ProjectItem | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+
+  // Sync with browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      if (selected) {
+        setSelected(null);
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [selected]);
+
+  const openProject = (project: ProjectItem) => {
+    setSelected(project);
+    const isResearch = research.some((r) => r.id === project.id);
+    const prefix = isResearch ? "/research/" : "/projects/";
+    if (typeof window !== "undefined") {
+      window.history.pushState({ modalOpen: true, id: project.id }, "", `${prefix}${project.id}`);
+    }
+  };
+
+  const closeProject = () => {
+    setSelected(null);
+    if (typeof window !== "undefined" && window.location.pathname !== "/") {
+      window.history.pushState(null, "", "/");
+    }
+  };
 
   if (projects.length === 0 && research.length === 0) return null;
 
@@ -74,7 +101,7 @@ export default function ProjectsGrid({
                   key={project.id}
                   project={project}
                   index={index}
-                  onOpen={setSelected}
+                  onOpen={openProject}
                 />
               ))}
             </div>
@@ -95,7 +122,7 @@ export default function ProjectsGrid({
                         key={project.id}
                         project={project}
                         index={visibleResearch.length + index}
-                        onOpen={setSelected}
+                        onOpen={openProject}
                       />
                     ))}
                   </div>
@@ -130,7 +157,7 @@ export default function ProjectsGrid({
                   key={project.id}
                   project={project}
                   index={visibleResearch.length + extraResearch.length + index}
-                  onOpen={setSelected}
+                  onOpen={openProject}
                 />
               ))}
             </div>
@@ -156,7 +183,7 @@ export default function ProjectsGrid({
                           visibleProjects.length +
                           index
                         }
-                        onOpen={setSelected}
+                        onOpen={openProject}
                       />
                     ))}
                   </div>
@@ -226,7 +253,7 @@ export default function ProjectsGrid({
         {selected && (
           <ProjectDetailOverlay
             project={selected}
-            onClose={() => setSelected(null)}
+            onClose={closeProject}
           />
         )}
       </AnimatePresence>

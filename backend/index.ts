@@ -173,6 +173,10 @@ export async function getProjectBySlug(slug: string): Promise<ProjectItem | null
   }
 }
 
+export async function getResearchBySlug(slug: string): Promise<ProjectItem | null> {
+  return getProjectBySlug(slug);
+}
+
 // 3. NOW ITEMS (BUILDING & LEARNING)
 export async function getNowBuilding(): Promise<NowItem[]> {
   await ensureInit();
