@@ -23,26 +23,14 @@ export default function LiveVisitorBadge({ initialCount = 0 }: { initialCount?: 
   useEffect(() => {
     setMounted(true);
 
-    let clientId = "";
-    try {
-      clientId = localStorage.getItem("ujwal_visitor_uuid") || "";
-      if (!clientId) {
-        clientId = "usr_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
-        localStorage.setItem("ujwal_visitor_uuid", clientId);
-      }
-    } catch {
-      // localStorage disabled / private mode
-    }
-
-    // Record visit with persistent device ID and get live distinct count
+    // Record visit with server-managed httpOnly cookie and 30-day fingerprint deduplication
     fetch("/api/visitors", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ clientId }),
+      credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data && typeof data.count === "number") {
+        if (data && typeof data.count === "number" && data.count > 0) {
           setCount(data.count);
         }
       })
@@ -56,14 +44,14 @@ export default function LiveVisitorBadge({ initialCount = 0 }: { initialCount?: 
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 backdrop-blur-md"
+      className="inline-flex items-center gap-2 px-3 py-1 bg-transparent"
     >
       {/* Matching Green Dot */}
-      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse shrink-0" />
+      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] animate-pulse shrink-0 relative top-[0.5px]" />
 
-      {/* Matching Text & Emerald Count */}
-      <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/70 flex items-center gap-1.5">
-        <span className="font-semibold text-emerald-400 tracking-normal">
+      {/* Vibrant Large Emerald Count & Legible Text */}
+      <span className="font-mono text-xs sm:text-[13px] uppercase tracking-[0.16em] text-white/80 flex items-center gap-2">
+        <span className="text-sm sm:text-[15px] font-bold text-emerald-400 tracking-normal [text-shadow:0_0_12px_rgba(52,211,153,0.75)]">
           {mounted && count > 0 ? (
             <AnimatedNumber value={count} />
           ) : (

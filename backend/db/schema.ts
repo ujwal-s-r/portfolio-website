@@ -72,10 +72,11 @@ export const siteSettings = sqliteTable("site_settings", {
 });
 
 export const visitors = sqliteTable("visitors", {
-  deviceHash: text("device_hash").primaryKey(),
+  visitorId: text("visitor_id").primaryKey(),
+  fingerprintHash: text("fingerprint_hash").notNull(),
   firstVisitedAt: text("first_visited_at").notNull(),
   lastVisitedAt: text("last_visited_at").notNull(),
-  totalVisits: integer("total_visits").notNull().default(1),
+  visitCount: integer("visit_count").notNull().default(1),
 });
 
 export type Project = typeof projects.$inferSelect;

@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import { recordVisitor, getUniqueVisitorCount } from "@/backend";
+import { trackVisitor, getUniqueVisitorCount } from "@/backend";
 
 export const dynamic = "force-dynamic";
+
+const COOKIE_NAME = "vid";
+const FIVE_YEARS_IN_SECONDS = 5 * 365 * 24 * 60 * 60;
 
 export async function GET() {
   const count = await getUniqueVisitorCount();
@@ -11,33 +14,36 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    let clientId = "";
-    try {
-      const body = await request.json();
-      if (body && typeof body.clientId === "string" && body.clientId.length > 5) {
-        clientId = body.clientId;
-      }
-    } catch {
-      // body is optional
-    }
+    const incomingVid = request.cookies.get(COOKIE_NAME)?.value;
 
     const ip =
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       request.headers.get("x-real-ip") ||
       "127.0.0.1";
     const userAgent = request.headers.get("user-agent") || "";
+    const acceptLanguage = request.headers.get("accept-language") || "";
 
-    // Bulletproof device deduplication using client device ID or IP+UA fallback
-    const raw = clientId
-      ? `client::${clientId}::ujwal_secret_visitor_salt_2026`
-      : `${ip}::${userAgent}::ujwal_secret_visitor_salt_2026`;
+    const fingerprint = crypto
+      .createHash("sha256")
+      .update(`${ip}::${userAgent}::${acceptLanguage}::ujwal_salt_2026`)
+      .digest("hex");
 
-    const deviceHash = crypto.createHash("sha256").update(raw).digest("hex");
+    const { visitorId, totalCount } = await trackVisitor(incomingVid, fingerprint);
 
-    const count = await recordVisitor(deviceHash);
-    return NextResponse.json({ count });
+    const response = NextResponse.json({ count: totalCount });
+
+    // Set httpOnly persistent cookie
+    response.cookies.set(COOKIE_NAME, visitorId, {
+      maxAge: FIVE_YEARS_IN_SECONDS,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+    });
+
+    return response;
   } catch (err) {
-    console.error("Error in visitors endpoint:", err);
+    console.error("Error in /api/visitors:", err);
     const count = await getUniqueVisitorCount();
     return NextResponse.json({ count });
   }

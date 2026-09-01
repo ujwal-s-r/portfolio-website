@@ -55,7 +55,7 @@ export default function ProjectCard({
       }}
     >
       {/* =========================================================
-          CARD CONTAINER
+          CARD CONTAINER (PURE BLACK WITH BRIGHT WHITE BORDER)
       ========================================================= */}
       <div
         className="
@@ -67,14 +67,14 @@ export default function ProjectCard({
           overflow-hidden
           rounded-xl
           border
-          border-white/[0.08]
-          bg-[#070707]
+          border-white/20
+          bg-black
           transition-all
           duration-400
           ease-[cubic-bezier(0.22,1,0.36,1)]
-          group-hover:border-emerald-500/40
-          group-hover:bg-[#0c0c0c]
-          group-hover:shadow-[0_0_24px_rgba(16,185,129,0.12)]
+          group-hover:border-white/45
+          group-hover:bg-black
+          group-hover:shadow-[0_0_20px_rgba(255,255,255,0.06)]
         "
       >
         {/* =======================================================
@@ -86,7 +86,7 @@ export default function ProjectCard({
             w-full
             shrink-0
             overflow-hidden
-            bg-[#050505]
+            bg-black
             aspect-[2.1/1]
           "
         >
@@ -114,16 +114,16 @@ export default function ProjectCard({
                 w-full
                 items-center
                 justify-center
-                bg-[#080808]
+                bg-black
               "
             >
               <span
                 className="
                   font-mono
-                  text-[9px]
+                  text-[10px]
                   uppercase
                   tracking-[0.2em]
-                  text-white/25
+                  text-white/30
                 "
               >
                 Project Preview
@@ -307,6 +307,10 @@ export default function ProjectCard({
         {/* =========================================================
             CONTENT (COMPACT)
         ========================================================= */}
+        {/* =========================================================
+            CONTENT CONTAINER
+            - Padding controls the inner gap & bottom boundary gap (p-3)
+        ========================================================= */}
         <div
           className="
             flex
@@ -314,55 +318,58 @@ export default function ProjectCard({
             flex-1
             flex-col
             justify-between
-            p-2.5
-            sm:p-2.5
+            p-2
           "
         >
-          {/* TITLE & INDEX */}
+          {/* TITLE & INDEX NUMBER */}
           <div
             className="
               flex
               w-full
               items-start
               justify-between
-              gap-2
+              gap-2.5
             "
           >
             <h3
               className="
-                min-h-[44px]
-                sm:min-h-[48px]
+                min-h-[42px]
+                sm:min-h-[44px]
                 min-w-0
                 flex-1
                 font-serif
-                text-[12px]
+                text-[12.5px]
                 font-medium
-                leading-[1.28]
+                leading-[1.3]
                 tracking-tight
                 text-white/95
-                sm:text-[13px]
-                sm:leading-[1.3]
+                sm:text-[13.5px]
               "
             >
               {project.title}
             </h3>
 
+            {/* Crisp non-distorted index number */}
             <span
               className="
                 shrink-0
-                pt-0.5
                 font-mono
-                text-[8.5px]
-                tracking-[0.16em]
-                text-white/30
+                text-[10px]
+                sm:text-[11px]
+                font-normal
+                tracking-normal
+                text-white/40
+                leading-none
+                pt-0.5
+                select-none
               "
             >
               {String(index + 1).padStart(2, "0")}
             </span>
           </div>
 
-          {/* TECH STACK - Compact uniform slot */}
-          <div className="mt-2 flex h-[22px] sm:h-[24px] flex-wrap items-center content-start gap-x-1.5 gap-y-0.5 overflow-hidden font-mono text-[9px] sm:text-[10px] text-white/50">
+          {/* TECH STACK - (mt-2 controls gap between title and technologies) */}
+          <div className="mt-0.1 flex h-[22px] sm:h-[24px] flex-wrap items-center content-start gap-x-1.5 gap-y-0.5 overflow-hidden font-mono text-[9px] sm:text-[10px] text-white/50">
             {project.techStack.slice(0, 4).map((tech, i) => (
               <span key={tech} className="inline-flex items-center">
                 {tech}
