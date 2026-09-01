@@ -23,26 +23,14 @@ export default function LiveVisitorBadge({ initialCount = 0 }: { initialCount?: 
   useEffect(() => {
     setMounted(true);
 
-    let clientId = "";
-    try {
-      clientId = localStorage.getItem("ujwal_visitor_uuid") || "";
-      if (!clientId) {
-        clientId = "usr_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
-        localStorage.setItem("ujwal_visitor_uuid", clientId);
-      }
-    } catch {
-      // localStorage disabled / private mode
-    }
-
-    // Record visit with persistent device ID and get live distinct count
+    // Record visit with server-managed httpOnly cookie and 30-day fingerprint deduplication
     fetch("/api/visitors", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ clientId }),
+      credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data && typeof data.count === "number") {
+        if (data && typeof data.count === "number" && data.count > 0) {
           setCount(data.count);
         }
       })

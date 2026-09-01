@@ -1,4 +1,5 @@
-import { asc, eq, or } from "drizzle-orm";
+import { asc, eq, or, and, gt, count, sql } from "drizzle-orm";
+import crypto from "crypto";
 import {
   db,
   projects,
@@ -7,6 +8,7 @@ import {
   skillGroups,
   linkedInPosts,
   siteSettings,
+  visitors,
 } from "./db";
 import type { ExperienceItem } from "@/app/lib/experience";
 import type { ProjectItem } from "@/app/lib/projects";
@@ -295,8 +297,6 @@ export async function getLinkedInPosts(): Promise<LinkedInPostItem[]> {
 }
 
 import { getBlobUrl } from "@/app/lib/blob";
-import { count, sql } from "drizzle-orm";
-import { visitors } from "./db";
 
 // 6. SITE SETTINGS (RESUME)
 export async function getResumeUrl(): Promise<string> {
@@ -335,30 +335,94 @@ export async function setResumeUrl(url: string): Promise<void> {
     });
 }
 
-// 7. VISITORS TRACKING
-export async function recordVisitor(deviceHash: string): Promise<number> {
+// 7. VISITORS TRACKING (HTTP-ONLY COOKIE + DB DEDUP + 30-DAY FINGERPRINT FALLBACK)
+export async function trackVisitor(
+  incomingVid?: string,
+  fingerprint?: string
+): Promise<{ visitorId: string; totalCount: number }> {
   await ensureInit();
   const now = new Date().toISOString();
+
+  let visitorId = incomingVid;
+
   try {
+    // 1. If cookie vid is present, check if it exists in DB
+    if (visitorId) {
+      const existing = await db
+        .select({ visitorId: visitors.visitorId })
+        .from(visitors)
+        .where(eq(visitors.visitorId, visitorId))
+        .limit(1);
+
+      if (existing.length > 0) {
+        // Known visitor with cookie -> just bump lastVisitedAt and visitCount
+        await db
+          .update(visitors)
+          .set({
+            lastVisitedAt: now,
+            visitCount: sql`${visitors.visitCount} + 1`,
+            ...(fingerprint ? { fingerprintHash: fingerprint } : {}),
+          })
+          .where(eq(visitors.visitorId, visitorId));
+
+        const totalCount = await getUniqueVisitorCount();
+        return { visitorId, totalCount };
+      }
+    }
+
+    // 2. No valid cookie -> check 30-day fingerprint fallback before creating new visitor
+    if (fingerprint) {
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      const match = await db
+        .select({ visitorId: visitors.visitorId })
+        .from(visitors)
+        .where(
+          and(
+            eq(visitors.fingerprintHash, fingerprint),
+            gt(visitors.lastVisitedAt, thirtyDaysAgo)
+          )
+        )
+        .limit(1);
+
+      if (match.length > 0) {
+        visitorId = match[0].visitorId;
+        await db
+          .update(visitors)
+          .set({
+            lastVisitedAt: now,
+            visitCount: sql`${visitors.visitCount} + 1`,
+          })
+          .where(eq(visitors.visitorId, visitorId));
+
+        const totalCount = await getUniqueVisitorCount();
+        return { visitorId, totalCount };
+      }
+    }
+
+    // 3. Brand new visitor -> generate new UUID and insert
+    visitorId = `vid_${crypto.randomUUID()}`;
     await db
       .insert(visitors)
       .values({
-        deviceHash,
+        visitorId,
+        fingerprintHash: fingerprint || "anonymous",
         firstVisitedAt: now,
         lastVisitedAt: now,
-        totalVisits: 1,
+        visitCount: 1,
       })
       .onConflictDoUpdate({
-        target: visitors.deviceHash,
+        target: visitors.visitorId,
         set: {
           lastVisitedAt: now,
-          totalVisits: sql`${visitors.totalVisits} + 1`,
+          visitCount: sql`${visitors.visitCount} + 1`,
         },
       });
   } catch (err) {
-    console.error("Error recording visitor:", err);
+    console.error("Error tracking visitor:", err);
   }
-  return getUniqueVisitorCount();
+
+  const totalCount = await getUniqueVisitorCount();
+  return { visitorId: visitorId || `vid_${Date.now()}`, totalCount };
 }
 
 export async function getUniqueVisitorCount(): Promise<number> {

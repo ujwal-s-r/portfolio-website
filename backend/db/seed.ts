@@ -96,10 +96,11 @@ export async function runMigrations(drop = false) {
 
   await client.execute(`
     CREATE TABLE IF NOT EXISTS visitors (
-      device_hash TEXT PRIMARY KEY,
+      visitor_id TEXT PRIMARY KEY,
+      fingerprint_hash TEXT NOT NULL,
       first_visited_at TEXT NOT NULL,
       last_visited_at TEXT NOT NULL,
-      total_visits INTEGER NOT NULL DEFAULT 1
+      visit_count INTEGER NOT NULL DEFAULT 1
     );
   `);
 }
